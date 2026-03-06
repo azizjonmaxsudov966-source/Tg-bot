@@ -1,21 +1,4 @@
 import os
-import sys
-import subprocess
-
-# Kerakli kutubxonalarni avtomatik o'rnatish
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package, "-q"])
-
-try:
-    import matplotlib
-except ImportError:
-    install("matplotlib")
-
-try:
-    import requests
-except ImportError:
-    install("requests")
-
 import math
 import telebot
 from telebot import types
@@ -23,12 +6,8 @@ import threading
 import time
 from datetime import datetime, timedelta
 import sqlite3
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import io
-import requests
+import urllib.request
+import json
 
 # -----------------------------------------------------------------------
 # ⚙️ SOZLAMALAR
@@ -452,10 +431,11 @@ def step_qibla(message):
     city = message.text.strip()
     try:
         # Geocoding — shahar koordinatalarini olish
-        geo_url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json&limit=1"
-        headers = {"User-Agent": "ShaxsiyNazoratchiBot/1.0"}
-        resp = requests.get(geo_url, headers=headers, timeout=10)
-        data = resp.json()
+        city_encoded = urllib.parse.quote(city)
+        geo_url = f"https://nominatim.openstreetmap.org/search?q={city_encoded}&format=json&limit=1"
+        req = urllib.request.Request(geo_url, headers={"User-Agent": "ShaxsiyNazoratchiBot/1.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode())
         if not data:
             bot.send_message(uid, "❌ Shahar topilmadi. Qaytadan urinib ko'ring.")
             show_namoz_menu(message.chat.id); return
@@ -1024,68 +1004,39 @@ def cb_grafik(call):
 def send_weekly_chart(uid):
     now = uz_time()
     days = [(now - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6, -1, -1)]
-    labels, done_vals, total_vals = [], [], []
     conn = get_conn()
+    text = "📊 *HAFTALIK REJA GRAFIGI*\n\n"
     for d in days:
         row = conn.execute(
             "SELECT COUNT(*) as j, SUM(CASE WHEN status=1 THEN 1 ELSE 0 END) as b FROM daily_tasks WHERE user_id=? AND sana=?",
             (uid, d)).fetchone()
-        labels.append(d[5:])  # MM-DD
-        total_vals.append(row['j'] or 0)
-        done_vals.append(row['b'] or 0)
+        j = row['j'] or 0; b = row['b'] or 0
+        foiz = int(b/j*100) if j else 0
+        filled = int(foiz/10); empty = 10-filled
+        bar = "🟩"*filled + "⬜"*empty
+        kun = datetime.strptime(d, "%Y-%m-%d").strftime("%d-%b")
+        text += f"📅 {kun}\n{bar} {foiz}% ({b}/{j})\n\n"
     conn.close()
-
-    fig, ax = plt.subplots(figsize=(10, 5), facecolor='#1a1a2e')
-    ax.set_facecolor('#16213e')
-    x = range(len(labels))
-    bars1 = ax.bar([i - 0.2 for i in x], total_vals, 0.4, label="Jami reja", color='#e94560', alpha=0.8)
-    bars2 = ax.bar([i + 0.2 for i in x], done_vals,  0.4, label="Bajarildi",  color='#0f3460', alpha=0.9)
-    ax.set_xticks(list(x)); ax.set_xticklabels(labels, color='white', fontsize=9)
-    ax.tick_params(colors='white'); ax.spines[:].set_color('#444')
-    ax.set_title("📊 Haftalik reja grafigi", color='white', fontsize=14, pad=15)
-    ax.set_ylabel("Reja soni", color='white')
-    ax.legend(facecolor='#1a1a2e', labelcolor='white')
-    for bar in bars2:
-        h = bar.get_height()
-        if h > 0: ax.text(bar.get_x()+bar.get_width()/2., h+0.05, f'{int(h)}', ha='center', color='white', fontsize=8)
-    plt.tight_layout()
-    buf = io.BytesIO(); plt.savefig(buf, format='png', dpi=150, bbox_inches='tight'); buf.seek(0)
-    plt.close()
-    bot.send_photo(uid, buf, caption="📆 *Haftalik reja grafigi*", parse_mode="Markdown")
+    bot.send_message(uid, text, parse_mode="Markdown")
 
 def send_monthly_chart(uid):
     now = uz_time()
-    weeks, done_vals, total_vals = [], [], []
+    text = "🗓 *OYLIK REJA GRAFIGI (4 hafta)*\n\n"
     conn = get_conn()
-    for w in range(4):
+    for w in range(3, -1, -1):
         end_d   = (now - timedelta(days=w*7)).strftime("%Y-%m-%d")
         start_d = (now - timedelta(days=w*7+6)).strftime("%Y-%m-%d")
         row = conn.execute(
             "SELECT COUNT(*) as j, SUM(CASE WHEN status=1 THEN 1 ELSE 0 END) as b FROM daily_tasks WHERE user_id=? AND sana>=? AND sana<=?",
             (uid, start_d, end_d)).fetchone()
-        weeks.append(f"{4-w}-hafta")
-        total_vals.append(row['j'] or 0)
-        done_vals.append(row['b'] or 0)
+        j = row['j'] or 0; b = row['b'] or 0
+        foiz = int(b/j*100) if j else 0
+        filled = int(foiz/10); empty = 10-filled
+        bar = "🟦"*filled + "⬜"*empty
+        hafta = 4-w
+        text += f"📆 {hafta}-hafta ({start_d[5:]} — {end_d[5:]})\n{bar} {foiz}% ({b}/{j})\n\n"
     conn.close()
-    weeks.reverse(); done_vals.reverse(); total_vals.reverse()
-
-    fig, ax = plt.subplots(figsize=(9, 5), facecolor='#1a1a2e')
-    ax.set_facecolor('#16213e')
-    ax.plot(weeks, total_vals, 'o-', color='#e94560', label='Jami', linewidth=2, markersize=8)
-    ax.plot(weeks, done_vals,  'o-', color='#4ecca3', label='Bajarildi', linewidth=2, markersize=8)
-    ax.fill_between(weeks, done_vals, alpha=0.2, color='#4ecca3')
-    ax.tick_params(colors='white'); ax.spines[:].set_color('#444')
-    ax.set_title("🗓 Oylik reja grafigi", color='white', fontsize=14, pad=15)
-    ax.set_ylabel("Reja soni", color='white')
-    ax.legend(facecolor='#1a1a2e', labelcolor='white')
-    for i, (t, d) in enumerate(zip(total_vals, done_vals)):
-        foiz = int(d/t*100) if t else 0
-        ax.annotate(f"{foiz}%", (weeks[i], d), textcoords="offset points",
-                    xytext=(0,8), ha='center', color='white', fontsize=9)
-    plt.tight_layout()
-    buf = io.BytesIO(); plt.savefig(buf, format='png', dpi=150, bbox_inches='tight'); buf.seek(0)
-    plt.close()
-    bot.send_photo(uid, buf, caption="🗓 *Oylik reja grafigi*", parse_mode="Markdown")
+    bot.send_message(uid, text, parse_mode="Markdown")
 
 def send_namoz_chart(uid):
     now = uz_time()
@@ -1096,26 +1047,21 @@ def send_namoz_chart(uid):
         (uid, start)).fetchall()
     conn.close()
     d = {'oqildi':0,'endi_oqiyman':0,'qazo':0}
-    for row in rows: d[row['holat']] = row['cnt']
+    for row in rows:
+        d[row['holat']] = row['cnt']
     total = sum(d.values())
     if total == 0:
-        bot.send_message(uid, "📊 Namoz ma'lumoti yo'q."); return
-
-    fig, ax = plt.subplots(figsize=(7, 7), facecolor='#1a1a2e')
-    sizes  = [d['oqildi'], d['endi_oqiyman'], d['qazo']]
-    labels = ["O'qildi ✅", "Endi o'qiyman ⏳", "Qazo 🔄"]
-    colors = ['#4ecca3', '#f7dc6f', '#e94560']
-    explode = (0.05, 0.05, 0.05)
-    wedges, texts, autotexts = ax.pie(sizes, labels=labels, colors=colors,
-        autopct='%1.1f%%', explode=explode, startangle=90,
-        textprops={'color':'white'}, pctdistance=0.8)
-    for at in autotexts: at.set_fontsize(11)
-    ax.set_title("🕌 Namoz statistikasi (7 kun)", color='white', fontsize=14, pad=15)
-    fig.patch.set_facecolor('#1a1a2e')
-    plt.tight_layout()
-    buf = io.BytesIO(); plt.savefig(buf, format='png', dpi=150, bbox_inches='tight'); buf.seek(0)
-    plt.close()
-    bot.send_photo(uid, buf, caption="🕌 *Namoz grafigi (7 kun)*", parse_mode="Markdown")
+        bot.send_message(uid, "Namoz ma'lumoti yo'q.")
+        return
+    oq_f  = int(d['oqildi']/total*100) if total else 0
+    en_f  = int(d['endi_oqiyman']/total*100) if total else 0
+    qaz_f = int(d['qazo']/total*100) if total else 0
+    text = "\U0001f54c *NAMOZ GRAFIGI (7 kun)*\n\n"
+    text += f"\u2705 O'qildi:       " + "\U0001f7e9"*int(oq_f/10) + "\u2b1c"*(10-int(oq_f/10)) + f" {oq_f}% ({d['oqildi']} ta)\n\n"
+    text += f"\u23f3 Endi o'qiyman: " + "\U0001f7e8"*int(en_f/10) + "\u2b1c"*(10-int(en_f/10)) + f" {en_f}% ({d['endi_oqiyman']} ta)\n\n"
+    text += f"\U0001f504 Qazo:          " + "\U0001f7e5"*int(qaz_f/10) + "\u2b1c"*(10-int(qaz_f/10)) + f" {qaz_f}% ({d['qazo']} ta)\n\n"
+    text += f"\U0001f4cc Jami: {total} ta namoz belgilandi"
+    bot.send_message(uid, text, parse_mode="Markdown")
 
 # Hisobot yordamchi funksiyalar
 def _task_block(uid, start, end):
