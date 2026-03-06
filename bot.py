@@ -1,4 +1,21 @@
 import os
+import sys
+import subprocess
+
+# Kerakli kutubxonalarni avtomatik o'rnatish
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package, "-q"])
+
+try:
+    import matplotlib
+except ImportError:
+    install("matplotlib")
+
+try:
+    import requests
+except ImportError:
+    install("requests")
+
 import math
 import telebot
 from telebot import types
