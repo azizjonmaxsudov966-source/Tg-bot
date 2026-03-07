@@ -7,7 +7,9 @@ import time
 from datetime import datetime, timedelta
 import sqlite3
 import urllib.request
+import urllib.parse
 import json
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # -----------------------------------------------------------------------
 # ⚙️ SOZLAMALAR
@@ -1317,12 +1319,36 @@ def schedule_checker():
             time.sleep(10)
 
 # -----------------------------------------------------------------------
+# 🌐 KEEPALIVE SERVER (Railway uchun — bot uxlamasligi uchun)
+# -----------------------------------------------------------------------
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot ishlayapti!")
+    def log_message(self, format, *args):
+        pass  # Logni jim qilish
+
+def run_health_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), HealthHandler)
+    server.serve_forever()
+
+# -----------------------------------------------------------------------
 # 🎬 ISHGA TUSHIRISH
 # -----------------------------------------------------------------------
 if __name__ == "__main__":
     print("✅ Bot ishga tushdi (UTC+5)")
+
+    # Health check server — Railway uchun
+    health_thread = threading.Thread(target=run_health_server, daemon=True)
+    health_thread.start()
+    print("🌐 Health server ishga tushdi")
+
+    # Taymer
     t = threading.Thread(target=schedule_checker, daemon=True)
     t.start()
+
     while True:
         try:
             bot.infinity_polling(timeout=30, long_polling_timeout=20)
