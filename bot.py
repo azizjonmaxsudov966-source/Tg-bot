@@ -311,6 +311,47 @@ def cmd_app(message):
     bot.send_message(uid, "📱 *Shaxsiy Nazoratchi* ilovasini oching:",
                      reply_markup=markup, parse_mode="Markdown")
 
+@bot.message_handler(commands=['reset_db'])
+def cmd_reset_db(message):
+    uid = message.from_user.id
+    markup = types.InlineKeyboardMarkup()
+    markup.row(
+        types.InlineKeyboardButton("✅ Ha, tozala", callback_data="confirm_reset"),
+        types.InlineKeyboardButton("❌ Yo'q", callback_data="cancel_reset"))
+    bot.send_message(uid,
+        "⚠️ *DIQQAT!*\n\n"
+        "Bu amal barcha ma'lumotlarni o'chirib tashlaydi:\n"
+        "• Barcha foydalanuvchilar\n"
+        "• Barcha rejalar\n"
+        "• Namoz statistikasi\n"
+        "• Odatlar va maqsadlar\n\n"
+        "Davom etishni xohlaysizmi?",
+        reply_markup=markup, parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda c: c.data == "confirm_reset")
+def cb_confirm_reset(call):
+    uid = call.from_user.id
+    try:
+        conn = get_conn()
+        tables = ['users','namoz_times','namoz_notify','namoz_stats',
+                  'daily_tasks','weekly_tasks','habits','habit_logs','goals','rewards']
+        for table in tables:
+            conn.execute(f"DELETE FROM {table}")
+        conn.commit()
+        conn.close()
+        bot.edit_message_text(
+            "✅ *Baza to'liq tozalandi!*\n\nQaytadan boshlash uchun /start yuboring.",
+            call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+    except Exception as e:
+        bot.send_message(uid, f"❌ Xatolik: {e}")
+
+@bot.callback_query_handler(func=lambda c: c.data == "cancel_reset")
+def cb_cancel_reset(call):
+    bot.edit_message_text(
+        "❌ Bekor qilindi. Ma'lumotlar saqlanib qoldi.",
+        call.message.chat.id, call.message.message_id)
+
+
 def check_subscription(message):
     uid = message.from_user.id
     try:
