@@ -17,7 +17,8 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 API_TOKEN   = os.environ.get('BOT_TOKEN', '8239336439:AAEsMwnWliN6vWhErJ6YEsup7KxY5DctAp0')
 KANAL_ID    = os.environ.get('KANAL_ID', '@shaxsiy_nazoratchi')
 KANAL_LINKI = os.environ.get('KANAL_LINKI', 'https://t.me/shaxsiy_nazoratchi')
-DB_PATH     = os.environ.get('DB_PATH', 'bot_data.db')
+DB_PATH      = os.environ.get('DB_PATH', 'bot_data.db')
+MINI_APP_URL = os.environ.get('MINI_APP_URL', '')  # GitHub Pages URL
 
 bot = telebot.TeleBot(API_TOKEN, parse_mode=None)
 
@@ -282,12 +283,33 @@ MUHIMLIK = {"🔴 Shoshilinch": "shoshilinch", "🟡 O'rta": "orta", "🟢 Oddiy
 @bot.message_handler(commands=['start'])
 def cmd_start(message):
     uid = message.from_user.id
+    markup = types.InlineKeyboardMarkup()
+    if MINI_APP_URL:
+        markup.add(types.InlineKeyboardButton(
+            "📱 Ilovani ochish",
+            web_app=types.WebAppInfo(url=MINI_APP_URL)))
+    markup.add(types.InlineKeyboardButton(
+        "📢 Kanal", url=KANAL_LINKI))
     bot.send_message(uid,
         "Assalomu alaykum! 👋\n*SHAXSIY NAZORATCHI* botiga xush kelibsiz!\n\n"
         "✅ Kunlik/Haftalik rejalar\n🕌 Namoz nazorati\n"
-        "🎯 Odatlar kuzatuvi\n🏆 Maqsad va mukofotlar\n📊 Statistika va grafiklar",
-        parse_mode="Markdown")
+        "🎯 Odatlar kuzatuvi\n🏆 Maqsad va mukofotlar\n📊 Statistika va grafiklar\n\n"
+        "👇 Ilovani ochish uchun tugmani bosing!",
+        reply_markup=markup, parse_mode="Markdown")
     check_subscription(message)
+
+@bot.message_handler(commands=['app'])
+def cmd_app(message):
+    uid = message.from_user.id
+    if not MINI_APP_URL:
+        bot.send_message(uid, "⚠️ Mini App hali sozlanmagan.")
+        return
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton(
+        "📱 Ilovani ochish",
+        web_app=types.WebAppInfo(url=MINI_APP_URL)))
+    bot.send_message(uid, "📱 *Shaxsiy Nazoratchi* ilovasini oching:",
+                     reply_markup=markup, parse_mode="Markdown")
 
 def check_subscription(message):
     uid = message.from_user.id
