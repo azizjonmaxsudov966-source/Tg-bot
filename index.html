@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Shaxsiy Nazoratchi</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0a0a0f;
+    --bg2:      #12121a;
+    --bg3:      #1a1a26;
+    --card:     #16161f;
+    --border:   rgba(255,255,255,0.07);
+    --accent:   #7c6af7;
+    --accent2:  #4ecdc4;
+    --accent3:  #f7c948;
+    --green:    #3ddc84;
+    --red:      #ff6b6b;
+    --text:     #f0f0ff;
+    --muted:    rgba(240,240,255,0.45);
+    --radius:   18px;
+    --radius-sm:10px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND MESH ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 10%, rgba(124,106,247,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(78,205,196,0.08) 0%, transparent 60%);
+    pointer-events:none;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky; top:0; z-index:100;
+    padding: 16px 20px 12px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .header-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .header-ball {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 13px; font-weight: 500;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed; bottom:0; left:0; right:0; z-index:100;
+    display: flex;
+    background: rgba(18,18,26,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  }
+
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    padding: 6px 4px;
+    cursor: pointer; border: none; background: none;
+    color: var(--muted); font-size: 10px;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
+  }
+
+  .nav-item.active { color: var(--accent); }
+  .nav-item .nav-icon { font-size: 22px; line-height: 1; }
+
+  .nav-item.active .nav-icon {
+    filter: drop-shadow(0 0 8px rgba(124,106,247,0.6));
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 20px 16px 100px; position: relative; z-index:1; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+
+  /* ── HOME PAGE ── */
+  .welcome-card {
+    background: linear-gradient(135deg, rgba(124,106,247,0.2), rgba(78,205,196,0.1));
+    border: 1px solid rgba(124,106,247,0.3);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+
+  .welcome-card::after {
+    content:'';
+    position:absolute; right:-20px; top:-20px;
+    width:120px; height:120px;
+    background: radial-gradient(circle, rgba(124,106,247,0.3), transparent 70%);
+    border-radius:50%;
+  }
+
+  .welcome-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .welcome-unvon {
+    color: var(--accent2); font-size: 14px; font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  .ball-display {
+    display: flex; align-items: baseline; gap: 6px;
+  }
+
+  .ball-number {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 40px;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .ball-label { color: var(--muted); font-size: 14px; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-bottom: 14px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 28px;
+    margin-bottom: 4px;
+  }
+
+  .stat-label { color: var(--muted); font-size: 12px; }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 6px; background: var(--bg3);
+    border-radius: 3px; overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* Motivatsiya */
+  .motivatsiya-card {
+    background: linear-gradient(135deg, rgba(247,201,72,0.1), rgba(61,220,132,0.08));
+    border: 1px solid rgba(247,201,72,0.2);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    font-size: 14px; line-height: 1.6;
+    color: rgba(240,240,255,0.85);
+  }
+
+  /* ── TASK ITEMS ── */
+  .task-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .task-item:active { transform: scale(0.98); }
+
+  .task-check {
+    width: 24px; height: 24px; flex-shrink: 0;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+
+  .task-item.done .task-check {
+    background: var(--green); border-color: var(--green);
+  }
+
+  .task-item.failed .task-check {
+    background: var(--red); border-color: var(--red);
+  }
+
+  .task-info { flex: 1; }
+
+  .task-name {
+    font-weight: 500; font-size: 14px;
+    margin-bottom: 3px;
+  }
+
+  .task-meta {
+    font-size: 11px; color: var(--muted);
+    display: flex; gap: 8px; align-items: center;
+  }
+
+  .priority-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    display: inline-block;
+  }
+
+  .priority-dot.shoshilinch { background: var(--red); }
+  .priority-dot.orta { background: var(--accent3); }
+  .priority-dot.oddiy { background: var(--green); }
+
+  .task-time {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* ── ADD BUTTON ── */
+  .add-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), rgba(124,106,247,0.7));
+    border: none; border-radius: var(--radius-sm);
+    color: white; font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 14px;
+    padding: 14px; cursor: pointer;
+    margin-bottom: 16px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .add-btn:active { opacity:0.85; transform: scale(0.98); }
+
+  /* ── NAMOZ ── */
+  .namoz-grid {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .namoz-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .namoz-left { display: flex; align-items: center; gap: 12px; }
+  .namoz-emoji { font-size: 22px; }
+
+  .namoz-name {
+    font-weight: 600; font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .namoz-time {
+    font-family: 'Syne', sans-serif;
+    color: var(--accent); font-size: 16px; font-weight: 700;
+  }
+
+  .namoz-status {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    border: 2px solid var(--border);
+  }
+
+  .namoz-status.oqildi { background: rgba(61,220,132,0.15); border-color: var(--green); }
+  .namoz-status.qazo   { background: rgba(255,107,107,0.15); border-color: var(--red); }
+  .namoz-status.endi   { background: rgba(247,201,72,0.15); border-color: var(--accent3); }
+
+  /* Namoz stats */
+  .namoz-stat-bar {
+    margin-bottom: 14px;
+  }
+
+  .namoz-stat-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .namoz-stat-label {
+    width: 80px; font-size: 12px; color: var(--muted); flex-shrink: 0;
+  }
+
+  .namoz-bar-wrap {
+    flex: 1; height: 8px; background: var(--bg3);
+    border-radius: 4px; overflow: hidden;
+  }
+
+  .namoz-bar-fill { height: 100%; border-radius: 4px; }
+
+  .namoz-stat-count {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 13px;
+    width: 28px; text-align: right;
+  }
+
+  /* ── ODATLAR ── */
+  .habit-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+  }
+
+  .habit-emoji { font-size: 26px; }
+
+  .habit-info { flex: 1; }
+
+  .habit-name { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+
+  .habit-streak {
+    font-size: 11px; color: var(--accent3);
+    font-weight: 600;
+  }
+
+  .habit-check {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .habit-check.done {
+    background: rgba(61,220,132,0.15);
+    border-color: var(--green);
+  }
+
+  /* ── MAQSADLAR ── */
+  .goal-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .goal-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .goal-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 15px;
+  }
+
+  .goal-badge {
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  .goal-badge.active {
+    background: rgba(124,106,247,0.2);
+    color: var(--accent);
+    border: 1px solid rgba(124,106,247,0.3);
+  }
+
+  .goal-badge.done {
+    background: rgba(61,220,132,0.15);
+    color: var(--green);
+    border: 1px solid rgba(61,220,132,0.3);
+  }
+
+  .goal-meta {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 10px;
+    display: flex; gap: 12px;
+  }
+
+  .goal-reward {
+    font-size: 13px; color: var(--accent3);
+    margin-bottom: 12px;
+  }
+
+  .goal-progress {
+    height: 4px; background: var(--bg3);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .goal-progress-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  /* ── HISOBOT ── */
+  .period-tabs {
+    display: flex; gap: 8px; margin-bottom: 16px;
+  }
+
+  .period-tab {
+    flex: 1; padding: 9px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer;
+    font-size: 12px; font-weight: 600;
+    color: var(--muted); text-align: center;
+    transition: all 0.2s;
+  }
+
+  .period-tab.active {
+    background: rgba(124,106,247,0.15);
+    border-color: rgba(124,106,247,0.4);
+    color: var(--accent);
+  }
+
+  /* Chart bars */
+  .chart-wrap {
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 120px; margin-bottom: 8px;
+    padding: 0 4px;
+  }
+
+  .chart-col {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 4px; height: 100%;
+  }
+
+  .chart-bars {
+    flex: 1; width: 100%;
+    display: flex; align-items: flex-end; gap: 2px;
+  }
+
+  .chart-bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+    min-height: 4px;
+  }
+
+  .chart-bar.total { background: rgba(124,106,247,0.3); }
+  .chart-bar.done  { background: var(--accent); }
+
+  .chart-label {
+    font-size: 9px; color: var(--muted);
+    text-align: center; white-space: nowrap;
+  }
+
+  .chart-legend {
+    display: flex; gap: 16px; margin-bottom: 16px;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 2px;
+  }
+
+  /* Score ring */
+  .score-ring-wrap {
+    display: flex; align-items: center; gap: 20px;
+    padding: 16px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-bottom: 12px;
+  }
+
+  .score-ring {
+    width: 80px; height: 80px; flex-shrink: 0;
+    position: relative;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+
+  .score-ring-text {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+
+  .score-pct {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 20px;
+  }
+
+  .score-sub { font-size: 9px; color: var(--muted); }
+
+  .score-info { flex: 1; }
+
+  .score-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .score-rows { display: flex; flex-direction: column; gap: 4px; }
+  .score-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+  .score-row span:last-child { color: var(--text); font-weight: 500; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    align-items: flex-end;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    width: 100%; max-height: 85vh;
+    background: var(--bg2);
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid var(--border);
+    padding: 24px 20px max(24px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 0 auto 20px;
+  }
+
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .input-group { margin-bottom: 16px; }
+
+  .input-label {
+    font-size: 12px; color: var(--muted);
+    font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 8px;
+    display: block;
+  }
+
+  .input-field {
+    width: 100%; background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 15px; padding: 13px 16px;
+    outline: none; transition: border-color 0.2s;
+  }
+
+  .input-field:focus { border-color: rgba(124,106,247,0.5); }
+
+  .select-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  .select-chip {
+    padding: 7px 14px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; font-size: 12px; cursor: pointer;
+    transition: all 0.2s; color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .select-chip.selected {
+    background: rgba(124,106,247,0.15);
+    border-color: rgba(124,106,247,0.4);
+    color: var(--accent);
+  }
+
+  .modal-btn {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--accent), rgba(78,205,196,0.8));
+    border: none; border-radius: var(--radius-sm);
+    color: white; font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 15px; cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+
+  .modal-btn:active { opacity: 0.85; }
+
+  /* ── UNVON BAR ── */
+  .unvon-bar {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .unvon-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 10px;
+  }
+
+  .unvon-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 14px;
+  }
+
+  .unvon-next {
+    font-size: 11px; color: var(--muted);
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; line-height: 1.6; }
+
+  /* Section header */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 16px;
+  }
+
+  .section-badge {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: 11px; color: var(--muted);
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 8px; margin-bottom: 16px;
+    overflow-x: auto; padding-bottom: 4px;
+  }
+
+  .tab {
+    padding: 8px 16px; border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg3); color: var(--muted);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+  }
+
+  .tab.active {
+    background: rgba(124,106,247,0.15);
+    border-color: rgba(124,106,247,0.4);
+    color: var(--accent);
+  }
+
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 10px 20px;
+    font-size: 13px; font-weight: 500;
+    z-index: 300; white-space: nowrap;
+    animation: toastIn 0.3s ease;
+    pointer-events: none;
+  }
+
+  @keyframes toastIn {
+    from { opacity:0; transform: translateX(-50%) translateY(10px); }
+    to   { opacity:1; transform: translateX(-50%) translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">🎯 Nazoratchi</div>
+  <div class="header-ball" id="headerBall">💰 0 ball</div>
+</div>
+
+<!-- PAGES -->
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="welcome-card">
+    <div class="welcome-name" id="userName">Salom!</div>
+    <div class="welcome-unvon" id="userUnvon">🥉 Yangi boshlovchi</div>
+    <div class="ball-display">
+      <div class="ball-number" id="userBall">0</div>
+      <div class="ball-label">ball</div>
+    </div>
+  </div>
+
+  <div class="unvon-bar">
+    <div class="unvon-header">
+      <div class="unvon-name" id="unvonName">🥉 Yangi boshlovchi</div>
+      <div class="unvon-next" id="unvonNext">100 ball qoldi</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="unvonProgress" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="motivatsiya-card" id="motivCard">✨ Bugungi maqsadingizga bir qadam yaqinlashing!</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent)" id="statReja">0</div>
+      <div class="stat-label">Bugungi reja</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--green)" id="statBajarildi">0%</div>
+      <div class="stat-label">Bajarildi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent2)" id="statNamoz">0</div>
+      <div class="stat-label">Namoz (bugun)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent3)" id="statOdat">0</div>
+      <div class="stat-label">Odat streak</div>
+    </div>
+  </div>
+</div>
+
+<!-- REJALAR -->
+<div class="page" id="page-tasks">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('daily',this)">📝 Kunlik</div>
+    <div class="tab" onclick="switchTab('weekly',this)">📅 Haftalik</div>
+  </div>
+
+  <button class="add-btn" onclick="openModal('task')">＋ Yangi reja qo'shish</button>
+
+  <div id="taskList">
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <div class="empty-text">Hali reja yo'q.<br>Yuqoridagi tugmani bosing!</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAMOZ -->
+<div class="page" id="page-namoz">
+  <div class="card">
+    <div class="card-title">Bugungi namozlar</div>
+    <div class="namoz-grid" id="namozGrid">
+      <div class="namoz-item">
+        <div class="namoz-left">
+          <div class="namoz-emoji">☁️</div>
+          <div>
+            <div class="namoz-name">Bomdod</div>
+            <div class="namoz-time" id="t-bomdod">--:--</div>
+          </div>
+        </div>
+        <div class="namoz-status" id="s-bomdod" onclick="toggleNamoz('bomdod')">❓</div>
+      </div>
+      <div class="namoz-item">
+        <div class="namoz-left">
+          <div class="namoz-emoji">🌞</div>
+          <div>
+            <div class="namoz-name">Peshin</div>
+            <div class="namoz-time" id="t-peshin">--:--</div>
+          </div>
+        </div>
+        <div class="namoz-status" id="s-peshin" onclick="toggleNamoz('peshin')">❓</div>
+      </div>
+      <div class="namoz-item">
+        <div class="namoz-left">
+          <div class="namoz-emoji">🌤</div>
+          <div>
+            <div class="namoz-name">Asr</div>
+            <div class="namoz-time" id="t-asr">--:--</div>
+          </div>
+        </div>
+        <div class="namoz-status" id="s-asr" onclick="toggleNamoz('asr')">❓</div>
+      </div>
+      <div class="namoz-item">
+        <div class="namoz-left">
+          <div class="namoz-emoji">🌆</div>
+          <div>
+            <div class="namoz-name">Shom</div>
+            <div class="namoz-time" id="t-shom">--:--</div>
+          </div>
+        </div>
+        <div class="namoz-status" id="s-shom" onclick="toggleNamoz('shom')">❓</div>
+      </div>
+      <div class="namoz-item">
+        <div class="namoz-left">
+          <div class="namoz-emoji">🌃</div>
+          <div>
+            <div class="namoz-name">Xufton</div>
+            <div class="namoz-time" id="t-xufton">--:--</div>
+          </div>
+        </div>
+        <div class="namoz-status" id="s-xufton" onclick="toggleNamoz('xufton')">❓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Haftalik statistika</div>
+    <div class="namoz-stat-bar">
+      <div class="namoz-stat-row">
+        <div class="namoz-stat-label">✅ O'qildi</div>
+        <div class="namoz-bar-wrap">
+          <div class="namoz-bar-fill" id="nb-oqildi" style="width:0%;background:var(--green)"></div>
+        </div>
+        <div class="namoz-stat-count" id="nc-oqildi">0</div>
+      </div>
+      <div class="namoz-stat-row">
+        <div class="namoz-stat-label">⏳ Endi</div>
+        <div class="namoz-bar-wrap">
+          <div class="namoz-bar-fill" id="nb-endi" style="width:0%;background:var(--accent3)"></div>
+        </div>
+        <div class="namoz-stat-count" id="nc-endi">0</div>
+      </div>
+      <div class="namoz-stat-row">
+        <div class="namoz-stat-label">🔄 Qazo</div>
+        <div class="namoz-bar-wrap">
+          <div class="namoz-bar-fill" id="nb-qazo" style="width:0%;background:var(--red)"></div>
+        </div>
+        <div class="namoz-stat-count" id="nc-qazo">0</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="add-btn" onclick="openModal('namoz')">⏰ Namoz vaqtlarini yangilash</button>
+</div>
+
+<!-- ODATLAR & MAQSADLAR -->
+<div class="page" id="page-habits">
+  <div class="tabs">
+    <div class="tab active" onclick="switchHabitTab('habits',this)">🎯 Odatlar</div>
+    <div class="tab" onclick="switchHabitTab('goals',this)">🏆 Maqsadlar</div>
+    <div class="tab" onclick="switchHabitTab('rewards',this)">🎁 Mukofotlar</div>
+  </div>
+
+  <div id="habitsSection">
+    <button class="add-btn" onclick="openModal('habit')">＋ Yangi odat</button>
+    <div id="habitList">
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <div class="empty-text">Hali odat yo'q.<br>Yangi odat qo'shing!</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="goalsSection" style="display:none">
+    <button class="add-btn" onclick="openModal('goal')">＋ Yangi maqsad</button>
+    <div id="goalList">
+      <div class="empty-state">
+        <div class="empty-icon">🏆</div>
+        <div class="empty-text">Hali maqsad yo'q.<br>Maqsad qo'shing!</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="rewardsSection" style="display:none">
+    <button class="add-btn" onclick="openModal('reward')">＋ Mukofot qo'shish</button>
+    <div class="card">
+      <div class="card-title">💰 Ballarim</div>
+      <div style="text-align:center;padding:10px 0">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:48px;background:linear-gradient(135deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="rewardBall">0</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px">joriy ball</div>
+      </div>
+    </div>
+    <div id="rewardList"></div>
+  </div>
+</div>
+
+<!-- HISOBOT -->
+<div class="page" id="page-report">
+  <div class="period-tabs">
+    <div class="period-tab active" onclick="switchPeriod('daily',this)">Kunlik</div>
+    <div class="period-tab" onclick="switchPeriod('weekly',this)">Haftalik</div>
+    <div class="period-tab" onclick="switchPeriod('monthly',this)">Oylik</div>
+  </div>
+
+  <div class="score-ring-wrap">
+    <div class="score-ring">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="url(#ringGrad)" stroke-width="8"
+          stroke-linecap="round" stroke-dasharray="201" id="ringDash" stroke-dashoffset="201"/>
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c6af7"/>
+            <stop offset="100%" stop-color="#4ecdc4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="score-ring-text">
+        <div class="score-pct" id="ringPct">0%</div>
+        <div class="score-sub">reja</div>
+      </div>
+    </div>
+    <div class="score-info">
+      <div class="score-title" id="reportTitle">Bugungi hisobot</div>
+      <div class="score-rows">
+        <div class="score-row"><span>Jami reja</span><span id="repTotal">0</span></div>
+        <div class="score-row"><span>Bajarildi</span><span id="repDone">0</span></div>
+        <div class="score-row"><span>Namoz ✅</span><span id="repNamoz">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Reja grafigi</div>
+    <div class="chart-legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:rgba(124,106,247,0.4)"></div> Jami
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--accent)"></div> Bajarildi
+      </div>
+    </div>
+    <div class="chart-wrap" id="chartWrap"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-item active" onclick="switchPage('home',this)">
+    <span class="nav-icon">🏠</span>Bosh
+  </button>
+  <button class="nav-item" onclick="switchPage('tasks',this)">
+    <span class="nav-icon">📝</span>Rejalar
+  </button>
+  <button class="nav-item" onclick="switchPage('namoz',this)">
+    <span class="nav-icon">🕌</span>Namoz
+  </button>
+  <button class="nav-item" onclick="switchPage('habits',this)">
+    <span class="nav-icon">🎯</span>Odatlar
+  </button>
+  <button class="nav-item" onclick="switchPage('report',this)">
+    <span class="nav-icon">📊</span>Hisobot
+  </button>
+</nav>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-task" onclick="closeModalOutside(event,'modal-task')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📝 Yangi reja</div>
+    <div class="input-group">
+      <label class="input-label">Reja nomi</label>
+      <input class="input-field" id="taskName" placeholder="Masalan: Kitob o'qish">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Vaqt (HH:MM)</label>
+      <input class="input-field" id="taskTime" type="time">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Kategoriya</label>
+      <div class="select-row" id="catSelect">
+        <div class="select-chip selected" onclick="selectChip(this,'cat')">💼 Ish</div>
+        <div class="select-chip" onclick="selectChip(this,'cat')">📚 O'qish</div>
+        <div class="select-chip" onclick="selectChip(this,'cat')">🏋️ Sport</div>
+        <div class="select-chip" onclick="selectChip(this,'cat')">👨‍👩‍👧 Oila</div>
+        <div class="select-chip" onclick="selectChip(this,'cat')">🌱 Shaxsiy</div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Muhimlik</label>
+      <div class="select-row" id="priSelect">
+        <div class="select-chip" onclick="selectChip(this,'pri')">🔴 Shoshilinch</div>
+        <div class="select-chip selected" onclick="selectChip(this,'pri')">🟡 O'rta</div>
+        <div class="select-chip" onclick="selectChip(this,'pri')">🟢 Oddiy</div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="saveTask()">✅ Saqlash</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-namoz" onclick="closeModalOutside(event,'modal-namoz')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🕌 Namoz vaqtlari</div>
+    <div class="input-group">
+      <label class="input-label">☁️ Bomdod</label>
+      <input class="input-field" id="n-bomdod" type="time">
+    </div>
+    <div class="input-group">
+      <label class="input-label">🌞 Peshin</label>
+      <input class="input-field" id="n-peshin" type="time">
+    </div>
+    <div class="input-group">
+      <label class="input-label">🌤 Asr</label>
+      <input class="input-field" id="n-asr" type="time">
+    </div>
+    <div class="input-group">
+      <label class="input-label">🌆 Shom</label>
+      <input class="input-field" id="n-shom" type="time">
+    </div>
+    <div class="input-group">
+      <label class="input-label">🌃 Xufton</label>
+      <input class="input-field" id="n-xufton" type="time">
+    </div>
+    <button class="modal-btn" onclick="saveNamoz()">✅ Saqlash (7 kun)</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-habit" onclick="closeModalOutside(event,'modal-habit')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🎯 Yangi odat</div>
+    <div class="input-group">
+      <label class="input-label">Odat nomi</label>
+      <input class="input-field" id="habitName" placeholder="Masalan: Suv ichish">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Emoji tanlang</label>
+      <div class="select-row" id="emojiSelect">
+        <div class="select-chip selected" onclick="selectChip(this,'emoji')">💧</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">📚</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">🏃</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">🧘</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">😴</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">✍️</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">🎵</div>
+        <div class="select-chip" onclick="selectChip(this,'emoji')">🍎</div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="saveHabit()">✅ Saqlash</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-goal" onclick="closeModalOutside(event,'modal-goal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🏆 Yangi maqsad</div>
+    <div class="input-group">
+      <label class="input-label">Maqsad nomi</label>
+      <input class="input-field" id="goalTitle" placeholder="Masalan: 30 kun yugurish">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Muddat (kun)</label>
+      <input class="input-field" id="goalDays" type="number" placeholder="Masalan: 30" min="1">
+    </div>
+    <div class="input-group">
+      <label class="input-label">O'zingizga mukofot</label>
+      <input class="input-field" id="goalReward" placeholder="Masalan: Yangi kitob sotib olaman">
+    </div>
+    <button class="modal-btn" onclick="saveGoal()">✅ Saqlash (+10 ball)</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-reward" onclick="closeModalOutside(event,'modal-reward')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🎁 Mukofot berish</div>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-family:Syne,sans-serif;font-weight:800;font-size:36px;color:var(--accent3)" id="modalBallShow">0</div>
+      <div style="color:var(--muted);font-size:13px">joriy ball</div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Mukofot nomi</label>
+      <input class="input-field" id="rewardName" placeholder="Masalan: Kino ko'rish">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Ball miqdori</label>
+      <input class="input-field" id="rewardCost" type="number" placeholder="Masalan: 50" min="1">
+    </div>
+    <button class="modal-btn" onclick="saveReward()">🎁 Mukofot olish</button>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────
+const S = {
+  user: { name: 'Salom', ball: 0 },
+  tasks: [],
+  weeklyTasks: [],
+  namozTimes: { bomdod:'', peshin:'', asr:'', shom:'', xufton:'' },
+  namozStats: {},
+  habits: [],
+  habitLogs: {},
+  goals: [],
+  rewards: [],
+  currentTab: 'daily',
+  habitTab: 'habits',
+};
+
+const MOTIVLAR = [
+  "🌟 Har bir qadam oldinga — g'alaba sari!",
+  "💪 Bugun qiyin, ertaga oson. Davom eting!",
+  "🎯 Maqsadingizga har kuni bir qadam yaqinlashing!",
+  "🔥 Kichik harakatlar katta natijalarga olib keladi!",
+  "⭐ Siz bugungi eng yaxshi versiyangiz bo'ling!",
+  "🚀 Izchillik — muvaffaqiyatning kaliti!",
+];
+
+const UNVONLAR = [
+  [0,    "🥉 Yangi boshlovchi", 100],
+  [100,  "🥈 Harakat qiluvchi", 300],
+  [300,  "🥇 Izchil inson",     600],
+  [600,  "🏅 Maqsadli shaxs",  1000],
+  [1000, "🏆 Nazoratchi ustasi",2000],
+  [2000, "👑 Rivojlanish chempioni", null],
+];
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getUnvon(ball) {
+  let u = UNVONLAR[0];
+  for (const un of UNVONLAR) { if (ball >= un[0]) u = un; }
+  return u;
+}
+
+// ── STORAGE ────────────────────────────────────────────────────────────
+function save() { localStorage.setItem('sn_data', JSON.stringify(S)); }
+
+function load() {
+  try {
+    const d = localStorage.getItem('sn_data');
+    if (d) {
+      const parsed = JSON.parse(d);
+      Object.assign(S, parsed);
+    }
+  } catch(e) {}
+}
+
+// ── TELEGRAM ───────────────────────────────────────────────────────────
+function initTg() {
+  if (window.Telegram?.WebApp) {
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.setHeaderColor('#0a0a0f');
+    tg.setBackgroundColor('#0a0a0f');
+    if (tg.initDataUnsafe?.user) {
+      S.user.name = tg.initDataUnsafe.user.first_name || 'Foydalanuvchi';
+      save();
+    }
+  }
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────
+function switchPage(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  el.classList.add('active');
+  if (page === 'home') renderHome();
+  if (page === 'tasks') renderTasks();
+  if (page === 'namoz') renderNamoz();
+  if (page === 'habits') renderHabits();
+  if (page === 'report') renderReport('daily');
+}
+
+function switchTab(tab, el) {
+  S.currentTab = tab;
+  document.querySelectorAll('#page-tasks .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderTasks();
+}
+
+function switchHabitTab(tab, el) {
+  S.habitTab = tab;
+  document.querySelectorAll('#page-habits .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('habitsSection').style.display  = tab === 'habits'  ? '' : 'none';
+  document.getElementById('goalsSection').style.display   = tab === 'goals'   ? '' : 'none';
+  document.getElementById('rewardsSection').style.display = tab === 'rewards' ? '' : 'none';
+  if (tab === 'rewards') renderRewards();
+  if (tab === 'goals') renderGoals();
+}
+
+function switchPeriod(period, el) {
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderReport(period);
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────
+function openModal(type) {
+  if (type === 'reward') {
+    document.getElementById('modalBallShow').textContent = S.user.ball;
+  }
+  document.getElementById('modal-' + type).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function closeModalOutside(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+function selectChip(el, group) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.select-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function getSelected(parentId) {
+  const el = document.querySelector(`#${parentId} .select-chip.selected`);
+  return el ? el.textContent.trim() : '';
+}
+
+// ── HOME ───────────────────────────────────────────────────────────────
+function renderHome() {
+  document.getElementById('userName').textContent = S.user.name;
+  const ball = S.user.ball;
+  document.getElementById('userBall').textContent = ball;
+  document.getElementById('headerBall').textContent = '💰 ' + ball + ' ball';
+  document.getElementById('rewardBall').textContent = ball;
+
+  const unvon = getUnvon(ball);
+  document.getElementById('userUnvon').textContent = unvon[1];
+  document.getElementById('unvonName').textContent = unvon[1];
+
+  const next = unvon[2];
+  const prev = unvon[0];
+  if (next) {
+    const pct = Math.min(100, ((ball - prev) / (next - prev)) * 100);
+    document.getElementById('unvonProgress').style.width = pct + '%';
+    document.getElementById('unvonNext').textContent = (next - ball) + ' ball qoldi';
+  } else {
+    document.getElementById('unvonProgress').style.width = '100%';
+    document.getElementById('unvonNext').textContent = 'Maksimal unvon! 👑';
+  }
+
+  document.getElementById('motivCard').textContent =
+    MOTIVLAR[Math.floor(Math.random() * MOTIVLAR.length)];
+
+  // Stats
+  const todayTasks = S.tasks.filter(t => t.date === today());
+  const done = todayTasks.filter(t => t.status === 'done').length;
+  const pct  = todayTasks.length ? Math.round(done/todayTasks.length*100) : 0;
+  document.getElementById('statReja').textContent = todayTasks.length;
+  document.getElementById('statBajarildi').textContent = pct + '%';
+
+  const todayNamoz = Object.values(S.namozStats[today()] || {}).filter(v=>v==='oqildi').length;
+  document.getElementById('statNamoz').textContent = todayNamoz;
+
+  // Streak
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const ds = d.toISOString().split('T')[0];
+    const log = S.habitLogs[ds];
+    if (!log || Object.values(log).every(v=>!v)) break;
+    streak++; d.setDate(d.getDate()-1);
+  }
+  document.getElementById('statOdat').textContent = streak;
+}
+
+// ── TASKS ──────────────────────────────────────────────────────────────
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  const source = S.currentTab === 'daily' ? S.tasks.filter(t=>t.date===today()) : S.weeklyTasks;
+
+  if (!source.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Hali reja yo'q.<br>Yuqoridagi tugmani bosing!</div></div>`;
+    return;
+  }
+
+  list.innerHTML = source.map((t,i) => {
+    const priClass = t.priority?.includes('Shoshilinch') ? 'shoshilinch' : t.priority?.includes('rta') ? 'orta' : 'oddiy';
+    const statusClass = t.status === 'done' ? 'done' : t.status === 'failed' ? 'failed' : '';
+    const check = t.status === 'done' ? '✓' : t.status === 'failed' ? '✗' : '';
+    const idx = S.currentTab === 'daily' ?
+      S.tasks.findIndex(x=>x===t) : S.weeklyTasks.findIndex(x=>x===t);
+    return `
+    <div class="task-item ${statusClass}" onclick="toggleTask(${idx})">
+      <div class="task-check">${check}</div>
+      <div class="task-info">
+        <div class="task-name">${t.name}</div>
+        <div class="task-meta">
+          <span class="priority-dot ${priClass}"></span>
+          ${t.category || ''} · ${t.priority || ''}
+        </div>
+      </div>
+      <div class="task-time">${t.time}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTask(idx) {
+  const arr = S.currentTab === 'daily' ? S.tasks : S.weeklyTasks;
+  const t = arr[idx];
+  if (t.status === 'done') {
+    t.status = null;
+  } else {
+    t.status = 'done';
+    if (S.currentTab === 'daily') addBall(15);
+  }
+  save(); renderTasks(); renderHome();
+}
+
+function saveTask() {
+  const name = document.getElementById('taskName').value.trim();
+  const time = document.getElementById('taskTime').value;
+  if (!name || !time) { showToast('❌ Ism va vaqt kiriting!'); return; }
+  const cat = getSelected('catSelect');
+  const pri = getSelected('priSelect');
+  const task = { name, time, category: cat, priority: pri, date: today(), status: null };
+  if (S.currentTab === 'daily') S.tasks.push(task);
+  else S.weeklyTasks.push(task);
+  save(); closeModal('modal-task');
+  document.getElementById('taskName').value = '';
+  renderTasks(); showToast('✅ Reja saqlandi!');
+}
+
+// ── NAMOZ ──────────────────────────────────────────────────────────────
+function renderNamoz() {
+  const nt = S.namozTimes;
+  const names = ['bomdod','peshin','asr','shom','xufton'];
+  names.forEach(n => {
+    document.getElementById('t-'+n).textContent = nt[n] || '--:--';
+    const stat = (S.namozStats[today()] || {})[n];
+    const el = document.getElementById('s-'+n);
+    el.className = 'namoz-status' + (stat ? ' '+stat : '');
+    el.textContent = stat === 'oqildi' ? '✅' : stat === 'qazo' ? '🔄' : stat === 'endi' ? '⏳' : '❓';
+  });
+
+  // Haftalik stats
+  let oq=0, endi=0, qazo=0, total=0;
+  for (let i=0; i<7; i++) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const day = S.namozStats[ds] || {};
+    for (const v of Object.values(day)) {
+      total++;
+      if (v==='oqildi') oq++;
+      else if (v==='endi') endi++;
+      else if (v==='qazo') qazo++;
+    }
+  }
+  const mx = total || 1;
+  document.getElementById('nb-oqildi').style.width = (oq/mx*100)+'%';
+  document.getElementById('nb-endi').style.width   = (endi/mx*100)+'%';
+  document.getElementById('nb-qazo').style.width   = (qazo/mx*100)+'%';
+  document.getElementById('nc-oqildi').textContent = oq;
+  document.getElementById('nc-endi').textContent   = endi;
+  document.getElementById('nc-qazo').textContent   = qazo;
+}
+
+function toggleNamoz(name) {
+  if (!S.namozStats[today()]) S.namozStats[today()] = {};
+  const cur = S.namozStats[today()][name];
+  const cycle = [null, 'oqildi', 'endi', 'qazo'];
+  const idx = cycle.indexOf(cur);
+  const next = cycle[(idx+1) % cycle.length];
+  S.namozStats[today()][name] = next;
+  if (next === 'oqildi') addBall(10);
+  save(); renderNamoz(); renderHome();
+  const msgs = { oqildi:"✅ Barakalla! O'qildi!", endi:"⏳ Endi o'qing!", qazo:"🔄 Qazo belgilandi", null:"❓" };
+  if (next) showToast(msgs[next]);
+}
+
+function saveNamoz() {
+  const names = ['bomdod','peshin','asr','shom','xufton'];
+  const vals = {};
+  let ok = true;
+  names.forEach(n => {
+    const v = document.getElementById('n-'+n).value;
+    if (!v) { ok=false; }
+    vals[n] = v;
+  });
+  if (!ok) { showToast('❌ Barcha vaqtlarni kiriting!'); return; }
+  S.namozTimes = vals; save();
+  closeModal('modal-namoz'); renderNamoz();
+  addBall(5); showToast('✅ Namoz vaqtlari saqlandi!');
+}
+
+// ── HABITS ─────────────────────────────────────────────────────────────
+function renderHabits() {
+  const list = document.getElementById('habitList');
+  if (!S.habits.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-text">Hali odat yo'q.</div></div>`;
+    return;
+  }
+  list.innerHTML = S.habits.filter(h=>h.active).map((h,i) => {
+    const done = (S.habitLogs[today()] || {})[i];
+    let streak = 0;
+    const d = new Date();
+    while (true) {
+      const ds = d.toISOString().split('T')[0];
+      if (!(S.habitLogs[ds] || {})[i]) break;
+      streak++; d.setDate(d.getDate()-1);
+    }
+    return `
+    <div class="habit-item">
+      <div class="habit-emoji">${h.emoji}</div>
+      <div class="habit-info">
+        <div class="habit-name">${h.name}</div>
+        <div class="habit-streak">🔥 ${streak} kun ketma-ket</div>
+      </div>
+      <div class="habit-check ${done?'done':''}" onclick="toggleHabit(${i})">${done?'✓':''}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleHabit(idx) {
+  if (!S.habitLogs[today()]) S.habitLogs[today()] = {};
+  const was = S.habitLogs[today()][idx];
+  S.habitLogs[today()][idx] = !was;
+  if (!was) addBall(5);
+  save(); renderHabits(); renderHome();
+  showToast(was ? '↩️ Bekor qilindi' : '✅ Bajarildi! +5 ball');
+}
+
+function saveHabit() {
+  const name = document.getElementById('habitName').value.trim();
+  if (!name) { showToast('❌ Nom kiriting!'); return; }
+  const emoji = getSelected('emojiSelect') || '✅';
+  S.habits.push({ name, emoji, active: true, created: today() });
+  save(); closeModal('modal-habit'); renderHabits();
+  document.getElementById('habitName').value = '';
+  addBall(5); showToast('✅ Odat qo\'shildi! +5 ball');
+}
+
+// ── GOALS ──────────────────────────────────────────────────────────────
+function renderGoals() {
+  const list = document.getElementById('goalList');
+  if (!S.goals.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🏆</div><div class="empty-text">Hali maqsad yo'q.</div></div>`;
+    return;
+  }
+  list.innerHTML = S.goals.map((g,i) => {
+    const deadline = new Date(g.deadline);
+    const now = new Date();
+    const total = (deadline - new Date(g.created)) / 86400000;
+    const passed = (now - new Date(g.created)) / 86400000;
+    const pct = Math.min(100, Math.round(passed/total*100));
+    const daysLeft = Math.max(0, Math.ceil((deadline-now)/86400000));
+    return `
+    <div class="goal-item">
+      <div class="goal-header">
+        <div class="goal-title">${g.title}</div>
+        <div class="goal-badge ${g.status}">${g.status==='done'?'✅ Bajarildi':'🎯 Jarayonda'}</div>
+      </div>
+      <div class="goal-meta">
+        <span>📅 ${daysLeft} kun qoldi</span>
+        <span>💰 +100 ball</span>
+      </div>
+      <div class="goal-reward">🎁 ${g.reward}</div>
+      <div class="goal-progress">
+        <div class="goal-progress-fill" style="width:${pct}%"></div>
+      </div>
+      ${g.status==='active' ? `<button class="add-btn" style="margin-top:12px;margin-bottom:0" onclick="completeGoal(${i})">✅ Bajarildi!</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function completeGoal(i) {
+  S.goals[i].status = 'done';
+  addBall(100); save(); renderGoals();
+  showToast('🎉 Tabriklaymiz! +100 ball!');
+}
+
+function saveGoal() {
+  const title = document.getElementById('goalTitle').value.trim();
+  const days  = parseInt(document.getElementById('goalDays').value);
+  const reward= document.getElementById('goalReward').value.trim();
+  if (!title || !days || !reward) { showToast('❌ Barcha maydonlarni to\'ldiring!'); return; }
+  const deadline = new Date();
+  deadline.setDate(deadline.getDate() + days);
+  S.goals.push({ title, deadline: deadline.toISOString().split('T')[0], reward, status:'active', created: today() });
+  save(); closeModal('modal-goal'); renderGoals();
+  addBall(10); showToast('✅ Maqsad saqlandi! +10 ball');
+  document.getElementById('goalTitle').value='';
+  document.getElementById('goalDays').value='';
+  document.getElementById('goalReward').value='';
+}
+
+// ── REWARDS ────────────────────────────────────────────────────────────
+function renderRewards() {
+  document.getElementById('rewardBall').textContent = S.user.ball;
+  const list = document.getElementById('rewardList');
+  if (!S.rewards.length) { list.innerHTML=''; return; }
+  list.innerHTML = `<div class="card"><div class="card-title">Olingan mukofotlar</div>` +
+    S.rewards.map(r => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-weight:500;font-size:14px">🎁 ${r.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${r.date}</div>
+      </div>
+      <div style="font-family:Syne,sans-serif;font-weight:700;color:var(--red)">-${r.cost} ball</div>
+    </div>`).join('') + '</div>';
+}
+
+function saveReward() {
+  const name = document.getElementById('rewardName').value.trim();
+  const cost = parseInt(document.getElementById('rewardCost').value);
+  if (!name || !cost) { showToast('❌ To\'ldiring!'); return; }
+  if (cost > S.user.ball) { showToast('❌ Ball yetarli emas!'); return; }
+  S.user.ball -= cost;
+  S.rewards.push({ name, cost, date: today() });
+  save(); closeModal('modal-reward'); renderRewards(); renderHome();
+  showToast('🎁 Mukofot olindi!');
+  document.getElementById('rewardName').value='';
+  document.getElementById('rewardCost').value='';
+}
+
+// ── REPORT ─────────────────────────────────────────────────────────────
+function renderReport(period) {
+  let days=[], title='';
+  const now = new Date();
+  if (period==='daily') {
+    days=[today()]; title='Bugungi hisobot';
+  } else if (period==='weekly') {
+    for (let i=6;i>=0;i--) {
+      const d=new Date(); d.setDate(d.getDate()-i);
+      days.push(d.toISOString().split('T')[0]);
+    }
+    title='Haftalik hisobot';
+  } else {
+    const first=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-01';
+    let d=new Date(first);
+    while(d<=now){ days.push(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
+    title='Oylik hisobot';
+  }
+
+  document.getElementById('reportTitle').textContent = title;
+
+  let totalT=0, doneT=0, namozT=0;
+  const chartData = days.map(ds => {
+    const dt = S.tasks.filter(t=>t.date===ds);
+    const dn = dt.filter(t=>t.status==='done').length;
+    totalT+=dt.length; doneT+=dn;
+    const nm = Object.values(S.namozStats[ds]||{}).filter(v=>v==='oqildi').length;
+    namozT+=nm;
+    return { label: ds.slice(5), total: dt.length, done: dn };
+  });
+
+  const pct = totalT ? Math.round(doneT/totalT*100) : 0;
+  document.getElementById('ringPct').textContent = pct+'%';
+  document.getElementById('repTotal').textContent = totalT;
+  document.getElementById('repDone').textContent  = doneT;
+  document.getElementById('repNamoz').textContent = namozT;
+
+  // Ring
+  const offset = 201 - (201 * pct / 100);
+  document.getElementById('ringDash').style.strokeDashoffset = offset;
+
+  // Chart
+  const maxVal = Math.max(...chartData.map(d=>d.total), 1);
+  const wrap = document.getElementById('chartWrap');
+  wrap.innerHTML = chartData.map(d => {
+    const th = Math.round((d.total/maxVal)*100);
+    const dh = Math.round((d.done/maxVal)*100);
+    return `
+    <div class="chart-col">
+      <div class="chart-bars">
+        <div class="chart-bar total" style="height:${th}%"></div>
+        <div class="chart-bar done"  style="height:${dh}%"></div>
+      </div>
+      <div class="chart-label">${period==='monthly'?d.label.split('-')[1]:d.label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── UTILS ──────────────────────────────────────────────────────────────
+function addBall(n) {
+  S.user.ball += n;
+  document.getElementById('headerBall').textContent = '💰 ' + S.user.ball + ' ball';
+  save();
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2500);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────
+load();
+initTg();
+renderHome();
+
+// Weekly tasks: har kuni bugungi listga qo'shish
+S.weeklyTasks.forEach(t => {
+  const exists = S.tasks.find(x=>x.name===t.name && x.date===today() && x.source==='weekly');
+  if (!exists) {
+    S.tasks.push({...t, date:today(), status:null, source:'weekly'});
+  }
+});
+save();
+</script>
+</body>
+</html>
