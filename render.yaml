@@ -1,11 +1,14 @@
 services:
-  - type: worker
+  - type: web
     name: shaxsiy-nazoratchi-bot
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
+    healthCheckPath: /health
     envVars:
       - key: BOT_TOKEN
+        sync: false
+      - key: MINI_APP_URL
         sync: false
       - key: KANAL_ID
         value: "@shaxsiy_nazoratchi"
