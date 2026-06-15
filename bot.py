@@ -3253,6 +3253,154 @@ def api_report():
     conn.close()
     return jsonify({"total": total_t, "done": done_t, "namoz": namoz_t, "chart": chart})
 
+@api.route('/api/weekly/add', methods=['POST'])
+def api_weekly_add():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    body = request.get_json(force=True)
+    name = (body.get('name') or '').strip()
+    task_time = (body.get('time') or '').strip()
+    category = body.get('category') or 'Umumiy'
+    priority = body.get('priority') or 'oddiy'
+    if not name or not task_time: return jsonify({"error": "invalid"}), 400
+    conn = get_conn()
+    conn.execute("INSERT INTO weekly_tasks (user_id,task_name,task_time,category,priority,active) VALUES (?,?,?,?,?,1)",
+                 (uid, name, task_time, category, priority))
+    conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+@api.route('/api/weekly/delete', methods=['POST'])
+def api_weekly_delete():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    tid = (request.get_json(force=True) or {}).get('id')
+    conn = get_conn()
+    conn.execute("UPDATE weekly_tasks SET active=0 WHERE id=? AND user_id=?", (tid, uid))
+    conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+@api.route('/api/zikr/add', methods=['POST'])
+def api_zikr_add():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    body = request.get_json(force=True)
+    name = (body.get('name') or '').strip()
+    emoji = body.get('emoji') or '📿'
+    try: target = int(body.get('target') or 33)
+    except: target = 33
+    if not name: return jsonify({"error": "invalid"}), 400
+    conn = get_conn()
+    conn.execute("INSERT INTO zikrs (user_id,name,emoji,target_count,active) VALUES (?,?,?,?,1)",
+                 (uid, name, emoji, target))
+    conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+@api.route('/api/zikr/click', methods=['POST'])
+def api_zikr_click():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    body = request.get_json(force=True)
+    zid = body.get('id')
+    try: amount = int(body.get('amount') or 1)
+    except: amount = 1
+    if amount not in [1, 10, 33, 100]: amount = 1
+    conn = get_conn()
+    z = conn.execute("SELECT id FROM zikrs WHERE id=? AND user_id=? AND active=1", (zid, uid)).fetchone()
+    if not z: conn.close(); return jsonify({"error": "not_found"}), 404
+    existing = conn.execute("SELECT id,count FROM zikr_logs WHERE zikr_id=? AND sana=?", (zid, today_str())).fetchone()
+    if existing:
+        new_count = existing['count'] + amount
+        conn.execute("UPDATE zikr_logs SET count=? WHERE id=?", (new_count, existing['id']))
+    else:
+        conn.execute("INSERT INTO zikr_logs (zikr_id,user_id,sana,count) VALUES (?,?,?,?)", (zid, uid, today_str(), amount))
+    if amount >= 33:
+        add_ball_conn(conn, uid, 2)
+    conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+@api.route('/api/challenge/list')
+def api_challenge_list():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    conn = get_conn()
+    challenges = conn.execute("SELECT id,title,emoji,description,duration_days,ball_reward,task_type FROM challenges WHERE active=1").fetchall()
+    joined = {r['challenge_id'] for r in conn.execute("SELECT challenge_id FROM user_challenges WHERE user_id=? AND status='active'", (uid,)).fetchall()}
+    result = []
+    for c in challenges:
+        result.append({**dict(c), "joined": c['id'] in joined})
+    conn.close()
+    return jsonify({"challenges": result})
+
+@api.route('/api/challenge/join', methods=['POST'])
+def api_challenge_join():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    cid = (request.get_json(force=True) or {}).get('id')
+    conn = get_conn()
+    c = conn.execute("SELECT id,duration_days FROM challenges WHERE id=? AND active=1", (cid,)).fetchone()
+    if not c: conn.close(); return jsonify({"error": "not_found"}), 404
+    already = conn.execute("SELECT id FROM user_challenges WHERE user_id=? AND challenge_id=? AND status='active'", (uid, cid)).fetchone()
+    if already: conn.close(); return jsonify({"error": "already_joined"}), 400
+    start = today_str()
+    end = (uz_time() + timedelta(days=c['duration_days'])).strftime("%Y-%m-%d")
+    conn.execute("INSERT INTO user_challenges (user_id,challenge_id,start_date,end_date,status) VALUES (?,?,?,?,'active')",
+                 (uid, cid, start, end))
+    conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+@api.route('/api/store/list')
+def api_store_list():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    conn = get_conn()
+    items = conn.execute("SELECT id,name,emoji,description,price,item_type FROM store_items WHERE active=1 ORDER BY price").fetchall()
+    bought = {r['item_id'] for r in conn.execute("SELECT item_id FROM user_items WHERE user_id=?", (uid,)).fetchall()}
+    result = []
+    for item in items:
+        result.append({**dict(item), "owned": item['id'] in bought})
+    conn.close()
+    return jsonify({"items": result})
+
+@api.route('/api/store/buy', methods=['POST'])
+def api_store_buy():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    item_id = (request.get_json(force=True) or {}).get('id')
+    conn = get_conn()
+    item = conn.execute("SELECT id,name,price,item_type FROM store_items WHERE id=? AND active=1", (item_id,)).fetchone()
+    if not item: conn.close(); return jsonify({"error": "not_found"}), 404
+    already = conn.execute("SELECT id FROM user_items WHERE user_id=? AND item_id=?", (uid, item_id)).fetchone()
+    if already: conn.close(); return jsonify({"error": "already_owned"}), 400
+    urow = conn.execute("SELECT ball FROM users WHERE user_id=?", (uid,)).fetchone()
+    if not urow or urow['ball'] < item['price']:
+        conn.close(); return jsonify({"error": "insufficient_ball"}), 400
+    add_ball_conn(conn, uid, -item['price'])
+    conn.execute("INSERT INTO user_items (user_id,item_id,bought_at) VALUES (?,?,?)", (uid, item_id, today_str()))
+    if item['item_type'] == 'avatar_style':
+        conn.execute("UPDATE avatar SET style=? WHERE user_id=?", (item['name'], uid))
+    elif item['item_type'] == 'frame':
+        conn.execute("UPDATE avatar SET frame=? WHERE user_id=?", (item['name'], uid))
+    elif item['item_type'] == 'badge':
+        conn.execute("UPDATE avatar SET badge=? WHERE user_id=?", (item['name'], uid))
+    conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+@api.route('/api/heatmap')
+def api_heatmap():
+    uid = get_request_user()
+    if uid is None: return jsonify({"error": "unauthorized"}), 401
+    conn = get_conn()
+    days = []
+    now = uz_time()
+    for i in range(29, -1, -1):
+        ds = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        row = conn.execute("SELECT COUNT(*) as j, SUM(CASE WHEN status=1 THEN 1 ELSE 0 END) as b FROM daily_tasks WHERE user_id=? AND sana=?", (uid, ds)).fetchone()
+        total = row['j'] or 0; done = row['b'] or 0
+        pct = round(done / total * 100) if total > 0 else 0
+        days.append({"date": ds, "total": total, "done": done, "pct": pct})
+    conn.close()
+    return jsonify({"days": days})
+
 def run_api_server():
     port = int(os.environ.get("PORT", 8080))
     api.run(host="0.0.0.0", port=port, threaded=True, use_reloader=False)
