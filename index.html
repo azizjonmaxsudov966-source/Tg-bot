@@ -34,7 +34,6 @@
     overflow-x: hidden;
   }
 
-  /* ── BACKGROUND MESH ── */
   body::before {
     content:'';
     position:fixed; inset:0; z-index:0;
@@ -44,7 +43,7 @@
     pointer-events:none;
   }
 
-  /* ── HEADER ── */
+  /* HEADER */
   .header {
     position: sticky; top:0; z-index:100;
     padding: 16px 20px 12px;
@@ -53,14 +52,12 @@
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
   }
-
   .header-logo {
     font-family: 'Syne', sans-serif;
     font-weight: 800; font-size: 18px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-
   .header-ball {
     display: flex; align-items: center; gap: 6px;
     background: var(--bg3); border: 1px solid var(--border);
@@ -68,7 +65,7 @@
     font-size: 13px; font-weight: 500;
   }
 
-  /* ── NAV ── */
+  /* NAV */
   .nav {
     position: fixed; bottom:0; left:0; right:0; z-index:100;
     display: flex;
@@ -77,31 +74,27 @@
     border-top: 1px solid var(--border);
     padding: 8px 0 max(8px, env(safe-area-inset-bottom));
   }
-
   .nav-item {
     flex: 1; display: flex; flex-direction: column;
     align-items: center; gap: 4px;
     padding: 6px 4px;
     cursor: pointer; border: none; background: none;
-    color: var(--muted); font-size: 10px;
+    color: var(--muted); font-size: 9px;
     font-family: 'DM Sans', sans-serif;
     transition: color 0.2s;
   }
-
   .nav-item.active { color: var(--accent); }
-  .nav-item .nav-icon { font-size: 22px; line-height: 1; }
-
+  .nav-item .nav-icon { font-size: 20px; line-height: 1; }
   .nav-item.active .nav-icon {
     filter: drop-shadow(0 0 8px rgba(124,106,247,0.6));
   }
 
-  /* ── PAGES ── */
-  .page { display: none; padding: 20px 16px 100px; position: relative; z-index:1; animation: fadeIn 0.3s ease; }
+  /* PAGES */
+  .page { display: none; padding: 16px 16px 100px; position: relative; z-index:1; animation: fadeIn 0.3s ease; }
   .page.active { display: block; }
-
   @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-  /* ── CARDS ── */
+  /* CARDS */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -109,7 +102,6 @@
     padding: 18px;
     margin-bottom: 14px;
   }
-
   .card-title {
     font-family: 'Syne', sans-serif;
     font-weight: 700; font-size: 13px;
@@ -118,69 +110,99 @@
     margin-bottom: 14px;
   }
 
-  /* ── HOME PAGE ── */
+  /* HOME */
   .welcome-card {
     background: linear-gradient(135deg, rgba(124,106,247,0.2), rgba(78,205,196,0.1));
     border: 1px solid rgba(124,106,247,0.3);
     border-radius: var(--radius);
-    padding: 24px 20px;
-    margin-bottom: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
     position: relative; overflow: hidden;
   }
-
   .welcome-card::after {
     content:'';
     position:absolute; right:-20px; top:-20px;
-    width:120px; height:120px;
+    width:100px; height:100px;
     background: radial-gradient(circle, rgba(124,106,247,0.3), transparent 70%);
     border-radius:50%;
   }
-
+  .welcome-top {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+  }
+  .avatar-bubble {
+    width: 54px; height: 54px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.15);
+    position: relative;
+  }
+  .avatar-frame-badge {
+    position: absolute; bottom: -2px; right: -2px;
+    font-size: 14px; line-height: 1;
+  }
   .welcome-name {
     font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 24px;
-    margin-bottom: 4px;
+    font-weight: 800; font-size: 20px;
+    margin-bottom: 2px;
   }
-
   .welcome-unvon {
-    color: var(--accent2); font-size: 14px; font-weight: 500;
-    margin-bottom: 16px;
+    color: var(--accent2); font-size: 12px; font-weight: 500;
   }
-
   .ball-display {
     display: flex; align-items: baseline; gap: 6px;
   }
-
   .ball-number {
     font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 40px;
+    font-weight: 800; font-size: 36px;
     background: linear-gradient(135deg, var(--accent3), var(--accent));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-
   .ball-label { color: var(--muted); font-size: 14px; }
+
+  /* Intizom card */
+  .intizom-row {
+    display: flex; gap: 10px; margin-bottom: 12px;
+  }
+  .intizom-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+  }
+  .intizom-score {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 32px;
+    margin-bottom: 2px;
+  }
+  .intizom-label { font-size: 11px; color: var(--muted); }
+  .intizom-rang {
+    font-size: 12px; font-weight: 600;
+    margin-top: 4px;
+  }
 
   /* Stats grid */
   .stats-grid {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px; margin-bottom: 14px;
+    gap: 10px; margin-bottom: 12px;
   }
-
   .stat-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 16px;
+    padding: 14px;
     text-align: center;
   }
-
   .stat-value {
     font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 28px;
+    font-weight: 700; font-size: 26px;
     margin-bottom: 4px;
   }
-
-  .stat-label { color: var(--muted); font-size: 12px; }
+  .stat-label { color: var(--muted); font-size: 11px; }
 
   /* Progress bar */
   .progress-bar {
@@ -188,10 +210,8 @@
     border-radius: 3px; overflow: hidden;
     margin-top: 8px;
   }
-
   .progress-fill {
-    height: 100%;
-    border-radius: 3px;
+    height: 100%; border-radius: 3px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
   }
@@ -201,26 +221,37 @@
     background: linear-gradient(135deg, rgba(247,201,72,0.1), rgba(61,220,132,0.08));
     border: 1px solid rgba(247,201,72,0.2);
     border-radius: var(--radius);
-    padding: 16px 18px;
-    margin-bottom: 14px;
-    font-size: 14px; line-height: 1.6;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-size: 13px; line-height: 1.6;
     color: rgba(240,240,255,0.85);
   }
 
-  /* ── TASK ITEMS ── */
+  /* Unvon bar */
+  .unvon-bar {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .unvon-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 8px;
+  }
+  .unvon-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
+  .unvon-next { font-size: 11px; color: var(--muted); }
+
+  /* TASK ITEMS */
   .task-item {
     display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px;
+    padding: 13px 14px;
     background: var(--bg3);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    margin-bottom: 10px;
+    margin-bottom: 9px;
     cursor: pointer;
     transition: border-color 0.2s, transform 0.15s;
   }
-
   .task-item:active { transform: scale(0.98); }
-
   .task-check {
     width: 24px; height: 24px; flex-shrink: 0;
     border: 2px solid var(--border);
@@ -229,156 +260,260 @@
     font-size: 12px;
     transition: all 0.2s;
   }
-
-  .task-item.done .task-check {
-    background: var(--green); border-color: var(--green);
-  }
-
-  .task-item.failed .task-check {
-    background: var(--red); border-color: var(--red);
-  }
-
+  .task-item.done .task-check { background: var(--green); border-color: var(--green); }
+  .task-item.failed .task-check { background: var(--red); border-color: var(--red); }
   .task-info { flex: 1; }
-
-  .task-name {
-    font-weight: 500; font-size: 14px;
-    margin-bottom: 3px;
-  }
-
-  .task-meta {
-    font-size: 11px; color: var(--muted);
-    display: flex; gap: 8px; align-items: center;
-  }
-
-  .priority-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    display: inline-block;
-  }
-
+  .task-name { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
+  .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+  .priority-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
   .priority-dot.shoshilinch { background: var(--red); }
   .priority-dot.orta { background: var(--accent3); }
   .priority-dot.oddiy { background: var(--green); }
+  .task-time { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: var(--accent); }
 
-  .task-time {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px; font-weight: 600;
-    color: var(--accent);
-  }
-
-  /* ── ADD BUTTON ── */
+  /* ADD BUTTON */
   .add-btn {
     width: 100%;
     background: linear-gradient(135deg, var(--accent), rgba(124,106,247,0.7));
     border: none; border-radius: var(--radius-sm);
     color: white; font-family: 'Syne', sans-serif;
     font-weight: 700; font-size: 14px;
-    padding: 14px; cursor: pointer;
-    margin-bottom: 16px;
+    padding: 13px; cursor: pointer;
+    margin-bottom: 14px;
     transition: opacity 0.2s, transform 0.15s;
   }
-
   .add-btn:active { opacity:0.85; transform: scale(0.98); }
 
-  /* ── NAMOZ ── */
-  .namoz-grid {
-    display: flex; flex-direction: column; gap: 10px;
-  }
-
+  /* NAMOZ */
+  .namoz-grid { display: flex; flex-direction: column; gap: 10px; }
   .namoz-item {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 16px;
+    padding: 13px 14px;
     background: var(--bg3);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
   }
-
   .namoz-left { display: flex; align-items: center; gap: 12px; }
   .namoz-emoji { font-size: 22px; }
-
-  .namoz-name {
-    font-weight: 600; font-size: 14px;
-    margin-bottom: 2px;
-  }
-
-  .namoz-time {
-    font-family: 'Syne', sans-serif;
-    color: var(--accent); font-size: 16px; font-weight: 700;
-  }
-
+  .namoz-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .namoz-time { font-family: 'Syne', sans-serif; color: var(--accent); font-size: 15px; font-weight: 700; }
   .namoz-status {
     width: 32px; height: 32px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 16px;
     border: 2px solid var(--border);
+    cursor: pointer;
   }
-
   .namoz-status.oqildi { background: rgba(61,220,132,0.15); border-color: var(--green); }
   .namoz-status.qazo   { background: rgba(255,107,107,0.15); border-color: var(--red); }
   .namoz-status.endi   { background: rgba(247,201,72,0.15); border-color: var(--accent3); }
 
-  /* Namoz stats */
-  .namoz-stat-bar {
-    margin-bottom: 14px;
-  }
-
-  .namoz-stat-row {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .namoz-stat-label {
-    width: 80px; font-size: 12px; color: var(--muted); flex-shrink: 0;
-  }
-
-  .namoz-bar-wrap {
-    flex: 1; height: 8px; background: var(--bg3);
-    border-radius: 4px; overflow: hidden;
-  }
-
+  .namoz-stat-bar { margin-bottom: 14px; }
+  .namoz-stat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .namoz-stat-label { width: 80px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .namoz-bar-wrap { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
   .namoz-bar-fill { height: 100%; border-radius: 4px; }
+  .namoz-stat-count { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; width: 28px; text-align: right; }
+  .namoz-info { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 10px; }
 
-  .namoz-stat-count {
+  /* ZIKR */
+  .zikr-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+  .zikr-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .zikr-emoji { font-size: 28px; }
+  .zikr-name-block { flex: 1; }
+  .zikr-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+  .zikr-today { font-size: 12px; color: var(--accent3); font-weight: 600; }
+  .zikr-count-big {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 40px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .zikr-target {
+    font-size: 11px; color: var(--muted);
+    text-align: center; margin-bottom: 10px;
+  }
+  .zikr-progress-bar {
+    height: 5px; background: var(--bg3);
+    border-radius: 3px; overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .zikr-progress-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent3));
+    transition: width 0.5s ease;
+  }
+  .zikr-btns {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .zikr-btn {
+    padding: 10px 4px;
+    background: rgba(124,106,247,0.12);
+    border: 1px solid rgba(124,106,247,0.25);
+    border-radius: 10px;
+    color: var(--accent);
     font-family: 'Syne', sans-serif;
     font-weight: 700; font-size: 13px;
-    width: 28px; text-align: right;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
   }
+  .zikr-btn:active { background: rgba(124,106,247,0.25); transform: scale(0.95); }
 
-  /* ── ODATLAR ── */
+  /* HABITS */
   .habit-item {
     display: flex; align-items: center; gap: 14px;
-    padding: 14px 16px;
+    padding: 13px 14px;
     background: var(--bg3);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    margin-bottom: 10px;
+    margin-bottom: 9px;
   }
-
   .habit-emoji { font-size: 26px; }
-
   .habit-info { flex: 1; }
-
   .habit-name { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
-
-  .habit-streak {
-    font-size: 11px; color: var(--accent3);
-    font-weight: 600;
-  }
-
+  .habit-streak { font-size: 11px; color: var(--accent3); font-weight: 600; }
   .habit-check {
     width: 36px; height: 36px; border-radius: 50%;
     border: 2px solid var(--border);
     display: flex; align-items: center; justify-content: center;
     font-size: 18px; cursor: pointer;
-    transition: all 0.2s;
-    flex-shrink: 0;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .habit-check.done { background: rgba(61,220,132,0.15); border-color: var(--green); }
+
+  /* CHALLENGE */
+  .challenge-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .challenge-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .challenge-emoji { font-size: 28px; }
+  .challenge-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+  .challenge-desc { font-size: 12px; color: var(--muted); }
+  .challenge-meta {
+    display: flex; gap: 12px;
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .challenge-badge {
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+    cursor: pointer; border: none; text-align: center;
+  }
+  .challenge-badge.join {
+    background: rgba(124,106,247,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(124,106,247,0.3);
+  }
+  .challenge-badge.joined {
+    background: rgba(61,220,132,0.1);
+    color: var(--green);
+    border: 1px solid rgba(61,220,132,0.2);
   }
 
-  .habit-check.done {
-    background: rgba(61,220,132,0.15);
-    border-color: var(--green);
+  /* STORE */
+  .store-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .store-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .store-item:active { transform: scale(0.97); }
+  .store-item.owned { border-color: rgba(61,220,132,0.3); background: rgba(61,220,132,0.05); }
+  .store-item-emoji { font-size: 32px; margin-bottom: 6px; }
+  .store-item-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .store-item-desc { font-size: 10px; color: var(--muted); margin-bottom: 8px; line-height: 1.4; }
+  .store-item-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 13px;
+    color: var(--accent3);
+  }
+  .store-item-price.owned-label { color: var(--green); }
+  .store-tabs {
+    display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto;
   }
 
-  /* ── MAQSADLAR ── */
+  /* RATING */
+  .rating-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+  }
+  .rating-item.me {
+    border-color: rgba(124,106,247,0.4);
+    background: rgba(124,106,247,0.08);
+  }
+  .rating-pos {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 18px;
+    width: 28px; text-align: center; flex-shrink: 0;
+  }
+  .rating-name { flex: 1; font-weight: 500; font-size: 14px; }
+  .rating-ball {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--accent3);
+  }
+
+  /* HEATMAP */
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .heatmap-cell {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    background: var(--bg3);
+    cursor: default;
+    transition: transform 0.1s;
+    position: relative;
+  }
+  .heatmap-cell:active { transform: scale(1.2); }
+  .heatmap-cell.level-0 { background: rgba(255,255,255,0.05); }
+  .heatmap-cell.level-1 { background: rgba(124,106,247,0.25); }
+  .heatmap-cell.level-2 { background: rgba(124,106,247,0.5); }
+  .heatmap-cell.level-3 { background: rgba(124,106,247,0.75); }
+  .heatmap-cell.level-4 { background: rgba(124,106,247,1); box-shadow: 0 0 6px rgba(124,106,247,0.6); }
+  .heatmap-legend {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--muted);
+    justify-content: flex-end; margin-bottom: 4px;
+  }
+  .hm-swatch { width: 12px; height: 12px; border-radius: 2px; }
+
+  /* GOALS */
   .goal-item {
     background: var(--card);
     border: 1px solid var(--border);
@@ -386,170 +521,86 @@
     padding: 16px;
     margin-bottom: 12px;
   }
-
   .goal-header {
     display: flex; align-items: flex-start;
     justify-content: space-between; gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
-
-  .goal-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 15px;
-  }
-
+  .goal-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
   .goal-badge {
     font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 20px;
-    flex-shrink: 0;
+    padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
   }
-
   .goal-badge.active {
-    background: rgba(124,106,247,0.2);
-    color: var(--accent);
+    background: rgba(124,106,247,0.2); color: var(--accent);
     border: 1px solid rgba(124,106,247,0.3);
   }
-
   .goal-badge.done {
-    background: rgba(61,220,132,0.15);
-    color: var(--green);
+    background: rgba(61,220,132,0.15); color: var(--green);
     border: 1px solid rgba(61,220,132,0.3);
   }
-
-  .goal-meta {
-    font-size: 12px; color: var(--muted);
-    margin-bottom: 10px;
-    display: flex; gap: 12px;
-  }
-
-  .goal-reward {
-    font-size: 13px; color: var(--accent3);
-    margin-bottom: 12px;
-  }
-
-  .goal-progress {
-    height: 4px; background: var(--bg3);
-    border-radius: 2px; overflow: hidden;
-  }
-
+  .goal-meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: flex; gap: 12px; }
+  .goal-reward { font-size: 12px; color: var(--accent3); margin-bottom: 10px; }
+  .goal-progress { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
   .goal-progress-fill {
     height: 100%; border-radius: 2px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
   }
 
-  /* ── HISOBOT ── */
-  .period-tabs {
-    display: flex; gap: 8px; margin-bottom: 16px;
-  }
-
+  /* HISOBOT */
+  .period-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
   .period-tab {
     flex: 1; padding: 9px;
     background: var(--bg3); border: 1px solid var(--border);
     border-radius: var(--radius-sm); cursor: pointer;
     font-size: 12px; font-weight: 600;
-    color: var(--muted); text-align: center;
-    transition: all 0.2s;
+    color: var(--muted); text-align: center; transition: all 0.2s;
   }
-
   .period-tab.active {
     background: rgba(124,106,247,0.15);
     border-color: rgba(124,106,247,0.4);
     color: var(--accent);
   }
 
-  /* Chart bars */
-  .chart-wrap {
-    display: flex; align-items: flex-end; gap: 6px;
-    height: 120px; margin-bottom: 8px;
-    padding: 0 4px;
-  }
-
-  .chart-col {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; gap: 4px; height: 100%;
-  }
-
-  .chart-bars {
-    flex: 1; width: 100%;
-    display: flex; align-items: flex-end; gap: 2px;
-  }
-
-  .chart-bar {
-    flex: 1; border-radius: 4px 4px 0 0;
-    transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
-    min-height: 4px;
-  }
-
+  .chart-wrap { display: flex; align-items: flex-end; gap: 5px; height: 100px; margin-bottom: 8px; padding: 0 2px; }
+  .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
+  .chart-bars { flex: 1; width: 100%; display: flex; align-items: flex-end; gap: 2px; }
+  .chart-bar { flex: 1; border-radius: 4px 4px 0 0; transition: height 0.6s cubic-bezier(0.4,0,0.2,1); min-height: 4px; }
   .chart-bar.total { background: rgba(124,106,247,0.3); }
   .chart-bar.done  { background: var(--accent); }
+  .chart-label { font-size: 9px; color: var(--muted); text-align: center; white-space: nowrap; }
+  .chart-legend { display: flex; gap: 16px; margin-bottom: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
 
-  .chart-label {
-    font-size: 9px; color: var(--muted);
-    text-align: center; white-space: nowrap;
-  }
-
-  .chart-legend {
-    display: flex; gap: 16px; margin-bottom: 16px;
-  }
-
-  .legend-item {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--muted);
-  }
-
-  .legend-dot {
-    width: 8px; height: 8px; border-radius: 2px;
-  }
-
-  /* Score ring */
   .score-ring-wrap {
-    display: flex; align-items: center; gap: 20px;
-    padding: 16px;
+    display: flex; align-items: center; gap: 18px;
+    padding: 14px;
     background: var(--bg3); border: 1px solid var(--border);
     border-radius: var(--radius-sm); margin-bottom: 12px;
   }
-
-  .score-ring {
-    width: 80px; height: 80px; flex-shrink: 0;
-    position: relative;
-  }
-
+  .score-ring { width: 80px; height: 80px; flex-shrink: 0; position: relative; }
   .score-ring svg { transform: rotate(-90deg); }
-
   .score-ring-text {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
   }
-
-  .score-pct {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 20px;
-  }
-
+  .score-pct { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
   .score-sub { font-size: 9px; color: var(--muted); }
-
   .score-info { flex: 1; }
-
-  .score-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 15px;
-    margin-bottom: 6px;
-  }
-
+  .score-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
   .score-rows { display: flex; flex-direction: column; gap: 4px; }
   .score-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
   .score-row span:last-child { color: var(--text); font-weight: 500; }
 
-  /* ── MODAL ── */
+  /* MODAL */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 200;
     background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
     align-items: flex-end;
   }
-
   .modal-overlay.open { display: flex; }
-
   .modal {
     width: 100%; max-height: 85vh;
     background: var(--bg2);
@@ -559,32 +610,15 @@
     overflow-y: auto;
     animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
   }
-
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to   { transform: translateY(0); }
-  }
-
-  .modal-handle {
-    width: 36px; height: 4px; border-radius: 2px;
-    background: var(--border); margin: 0 auto 20px;
-  }
-
-  .modal-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 20px;
-    margin-bottom: 20px;
-  }
-
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 20px; }
+  .modal-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; margin-bottom: 20px; }
   .input-group { margin-bottom: 16px; }
-
   .input-label {
     font-size: 12px; color: var(--muted);
     font-weight: 600; letter-spacing: 0.5px;
-    text-transform: uppercase; margin-bottom: 8px;
-    display: block;
+    text-transform: uppercase; margin-bottom: 8px; display: block;
   }
-
   .input-field {
     width: 100%; background: var(--bg3);
     border: 1px solid var(--border);
@@ -593,133 +627,84 @@
     font-size: 15px; padding: 13px 16px;
     outline: none; transition: border-color 0.2s;
   }
-
   .input-field:focus { border-color: rgba(124,106,247,0.5); }
-
-  .select-row {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-
+  .select-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .select-chip {
     padding: 7px 14px;
     background: var(--bg3); border: 1px solid var(--border);
     border-radius: 20px; font-size: 12px; cursor: pointer;
-    transition: all 0.2s; color: var(--muted);
-    white-space: nowrap;
+    transition: all 0.2s; color: var(--muted); white-space: nowrap;
   }
-
   .select-chip.selected {
     background: rgba(124,106,247,0.15);
     border-color: rgba(124,106,247,0.4);
     color: var(--accent);
   }
-
   .modal-btn {
     width: 100%; padding: 15px;
     background: linear-gradient(135deg, var(--accent), rgba(78,205,196,0.8));
     border: none; border-radius: var(--radius-sm);
     color: white; font-family: 'Syne', sans-serif;
     font-weight: 700; font-size: 15px; cursor: pointer;
-    margin-top: 8px;
-    transition: opacity 0.2s;
+    margin-top: 8px; transition: opacity 0.2s;
   }
-
   .modal-btn:active { opacity: 0.85; }
 
-  /* ── UNVON BAR ── */
-  .unvon-bar {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 14px 16px;
-    margin-bottom: 12px;
-  }
-
-  .unvon-header {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 10px;
-  }
-
-  .unvon-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 14px;
-  }
-
-  .unvon-next {
-    font-size: 11px; color: var(--muted);
-  }
-
-  /* Empty state */
-  .empty-state {
-    text-align: center; padding: 40px 20px;
-    color: var(--muted);
-  }
-
-  .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-text { font-size: 14px; line-height: 1.6; }
-
-  /* Section header */
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 16px;
-  }
-
-  .section-badge {
-    background: var(--bg3); border: 1px solid var(--border);
-    border-radius: 20px; padding: 3px 10px;
-    font-size: 11px; color: var(--muted);
-  }
-
-  /* Tabs */
+  /* TABS */
   .tabs {
-    display: flex; gap: 8px; margin-bottom: 16px;
+    display: flex; gap: 8px; margin-bottom: 14px;
     overflow-x: auto; padding-bottom: 4px;
   }
-
   .tab {
-    padding: 8px 16px; border-radius: 20px;
+    padding: 8px 14px; border-radius: 20px;
     border: 1px solid var(--border);
     background: var(--bg3); color: var(--muted);
-    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-size: 12px; font-weight: 500; cursor: pointer;
     white-space: nowrap; transition: all 0.2s;
   }
-
   .tab.active {
     background: rgba(124,106,247,0.15);
     border-color: rgba(124,106,247,0.4);
     color: var(--accent);
   }
 
+  /* Empty state */
+  .empty-state { text-align: center; padding: 36px 20px; color: var(--muted); }
+  .empty-icon { font-size: 44px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; line-height: 1.6; }
+
+  /* Section header */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+  .section-badge {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: 11px; color: var(--muted);
+  }
+
+  /* Toast */
   .toast {
     position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
     background: var(--bg3); border: 1px solid var(--border);
     border-radius: 20px; padding: 10px 20px;
     font-size: 13px; font-weight: 500;
     z-index: 300; white-space: nowrap;
-    animation: toastIn 0.3s ease;
-    pointer-events: none;
+    animation: toastIn 0.3s ease; pointer-events: none;
   }
-
   @keyframes toastIn {
     from { opacity:0; transform: translateX(-50%) translateY(10px); }
     to   { opacity:1; transform: translateX(-50%) translateY(0); }
   }
 
-  /* ── LOADING / ERROR OVERLAY ── */
+  /* Loading / Error */
   .full-overlay {
     position: fixed; inset: 0; z-index: 1000;
     background: var(--bg);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center; padding: 30px;
-    gap: 16px;
+    text-align: center; padding: 30px; gap: 16px;
   }
-
   .full-overlay.hidden { display: none; }
-
   .spinner {
     width: 40px; height: 40px;
     border: 3px solid var(--border);
@@ -727,32 +712,75 @@
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .overlay-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 18px;
-  }
-
-  .overlay-text {
-    color: var(--muted); font-size: 13px; line-height: 1.6;
-    max-width: 280px;
-  }
-
+  .overlay-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; }
+  .overlay-text { color: var(--muted); font-size: 13px; line-height: 1.6; max-width: 280px; }
   .overlay-btn {
-    margin-top: 8px;
-    padding: 10px 24px;
+    margin-top: 8px; padding: 10px 24px;
     background: rgba(124,106,247,0.15);
     border: 1px solid rgba(124,106,247,0.4);
     border-radius: 20px;
-    color: var(--accent); font-weight: 600; font-size: 13px;
-    cursor: pointer;
+    color: var(--accent); font-weight: 600; font-size: 13px; cursor: pointer;
   }
 
-  .namoz-info {
+  /* ACTIVE CHALLENGE STRIP */
+  .active-challenges-row {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 4px; margin-bottom: 12px;
+  }
+  .active-ch-chip {
+    flex-shrink: 0;
+    background: rgba(61,220,132,0.1);
+    border: 1px solid rgba(61,220,132,0.25);
+    border-radius: 12px; padding: 6px 12px;
+    font-size: 12px; font-weight: 600;
+    color: var(--green);
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  /* AVATAR PAGE */
+  .avatar-showcase {
+    text-align: center; padding: 20px 0 10px;
+  }
+  .avatar-big {
+    width: 90px; height: 90px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; margin: 0 auto 12px;
+    border: 3px solid rgba(255,255,255,0.15);
+    box-shadow: 0 0 30px rgba(124,106,247,0.4);
+  }
+  .avatar-info-name {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; margin-bottom: 4px;
+  }
+  .avatar-info-unvon { color: var(--accent2); font-size: 13px; margin-bottom: 8px; }
+  .avatar-xp {
     font-size: 12px; color: var(--muted);
-    text-align: center; margin-bottom: 10px;
+    background: var(--bg3); border-radius: 20px;
+    padding: 4px 14px; display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  /* INTIZOM page */
+  .intizom-detail {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .intizom-detail-row {
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .intizom-detail-row:last-child { border-bottom: none; }
+  .intizom-detail-val {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--accent);
   }
 </style>
 </head>
@@ -764,7 +792,6 @@
   <div class="overlay-title">🎯 Yuklanmoqda...</div>
   <div class="overlay-text" id="loadingText">Ma'lumotlar yuklanmoqda, biroz kuting.</div>
 </div>
-
 <div class="full-overlay hidden" id="errorOverlay">
   <div style="font-size:48px">⚠️</div>
   <div class="overlay-title">Ulanib bo'lmadi</div>
@@ -778,13 +805,21 @@
   <div class="header-ball" id="headerBall">💰 0 ball</div>
 </div>
 
-<!-- PAGES -->
+<!-- ═══════════ PAGES ═══════════ -->
 
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div class="welcome-card">
-    <div class="welcome-name" id="userName">Salom!</div>
-    <div class="welcome-unvon" id="userUnvon">🥉 Yangi boshlovchi</div>
+    <div class="welcome-top">
+      <div class="avatar-bubble" id="homeAvatar">
+        <span id="homeAvatarEmoji">👤</span>
+        <span class="avatar-frame-badge" id="homeAvatarBadge"></span>
+      </div>
+      <div>
+        <div class="welcome-name" id="userName">Salom!</div>
+        <div class="welcome-unvon" id="userUnvon">🥉 Yangi boshlovchi</div>
+      </div>
+    </div>
     <div class="ball-display">
       <div class="ball-number" id="userBall">0</div>
       <div class="ball-label">ball</div>
@@ -799,6 +834,27 @@
     <div class="progress-bar">
       <div class="progress-fill" id="unvonProgress" style="width:0%"></div>
     </div>
+  </div>
+
+  <!-- Intizom + Active challenges -->
+  <div class="intizom-row">
+    <div class="intizom-card">
+      <div class="intizom-score" id="homeIntizom" style="color:var(--accent)">0</div>
+      <div class="intizom-label">Intizom Indeksi</div>
+      <div class="intizom-rang" id="homeIntizomRang">–</div>
+    </div>
+    <div class="intizom-card">
+      <div class="intizom-score" id="homeStreak" style="color:var(--accent3)">0</div>
+      <div class="intizom-label">Streak (kun)</div>
+      <div class="intizom-rang" style="color:var(--accent3)">🔥</div>
+    </div>
+  </div>
+
+  <div id="activeChallengesStrip" style="display:none">
+    <div class="section-header">
+      <div class="section-title">🏁 Faol Challengelar</div>
+    </div>
+    <div class="active-challenges-row" id="activeChallengesRow"></div>
   </div>
 
   <div class="motivatsiya-card" id="motivCard">✨ Bugungi maqsadingizga bir qadam yaqinlashing!</div>
@@ -829,9 +885,7 @@
     <div class="tab active" onclick="switchTab('daily',this)">📝 Kunlik</div>
     <div class="tab" onclick="switchTab('weekly',this)">📅 Haftalik</div>
   </div>
-
   <button class="add-btn" onclick="openModal('task')">＋ Yangi reja qo'shish</button>
-
   <div id="taskList">
     <div class="empty-state">
       <div class="empty-icon">📋</div>
@@ -840,103 +894,125 @@
   </div>
 </div>
 
-<!-- NAMOZ -->
+<!-- NAMOZ + ZIKR -->
 <div class="page" id="page-namoz">
-  <div class="card">
-    <div class="card-title">Bugungi namozlar</div>
-    <div class="namoz-grid" id="namozGrid">
-      <div class="namoz-item">
-        <div class="namoz-left">
-          <div class="namoz-emoji">☁️</div>
-          <div>
-            <div class="namoz-name">Bomdod</div>
-            <div class="namoz-time" id="t-bomdod">--:--</div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchNamozTab('namoz',this)">🕌 Namoz</div>
+    <div class="tab" onclick="switchNamozTab('zikr',this)">📿 Zikr</div>
+  </div>
+
+  <!-- NAMOZ SECTION -->
+  <div id="namozSection">
+    <div class="card">
+      <div class="card-title">Bugungi namozlar</div>
+      <div class="namoz-grid">
+        <div class="namoz-item">
+          <div class="namoz-left">
+            <div class="namoz-emoji">☁️</div>
+            <div>
+              <div class="namoz-name">Bomdod</div>
+              <div class="namoz-time" id="t-bomdod">--:--</div>
+            </div>
           </div>
+          <div class="namoz-status" id="s-bomdod" onclick="toggleNamoz('bomdod')">❓</div>
         </div>
-        <div class="namoz-status" id="s-bomdod" onclick="toggleNamoz('bomdod')">❓</div>
+        <div class="namoz-item">
+          <div class="namoz-left">
+            <div class="namoz-emoji">🌞</div>
+            <div>
+              <div class="namoz-name">Peshin</div>
+              <div class="namoz-time" id="t-peshin">--:--</div>
+            </div>
+          </div>
+          <div class="namoz-status" id="s-peshin" onclick="toggleNamoz('peshin')">❓</div>
+        </div>
+        <div class="namoz-item">
+          <div class="namoz-left">
+            <div class="namoz-emoji">🌤</div>
+            <div>
+              <div class="namoz-name">Asr</div>
+              <div class="namoz-time" id="t-asr">--:--</div>
+            </div>
+          </div>
+          <div class="namoz-status" id="s-asr" onclick="toggleNamoz('asr')">❓</div>
+        </div>
+        <div class="namoz-item">
+          <div class="namoz-left">
+            <div class="namoz-emoji">🌆</div>
+            <div>
+              <div class="namoz-name">Shom</div>
+              <div class="namoz-time" id="t-shom">--:--</div>
+            </div>
+          </div>
+          <div class="namoz-status" id="s-shom" onclick="toggleNamoz('shom')">❓</div>
+        </div>
+        <div class="namoz-item">
+          <div class="namoz-left">
+            <div class="namoz-emoji">🌃</div>
+            <div>
+              <div class="namoz-name">Xufton</div>
+              <div class="namoz-time" id="t-xufton">--:--</div>
+            </div>
+          </div>
+          <div class="namoz-status" id="s-xufton" onclick="toggleNamoz('xufton')">❓</div>
+        </div>
       </div>
-      <div class="namoz-item">
-        <div class="namoz-left">
-          <div class="namoz-emoji">🌞</div>
-          <div>
-            <div class="namoz-name">Peshin</div>
-            <div class="namoz-time" id="t-peshin">--:--</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Haftalik statistika</div>
+      <div class="namoz-stat-bar">
+        <div class="namoz-stat-row">
+          <div class="namoz-stat-label">✅ O'qildi</div>
+          <div class="namoz-bar-wrap">
+            <div class="namoz-bar-fill" id="nb-oqildi" style="width:0%;background:var(--green)"></div>
           </div>
+          <div class="namoz-stat-count" id="nc-oqildi">0</div>
         </div>
-        <div class="namoz-status" id="s-peshin" onclick="toggleNamoz('peshin')">❓</div>
+        <div class="namoz-stat-row">
+          <div class="namoz-stat-label">⏳ Endi</div>
+          <div class="namoz-bar-wrap">
+            <div class="namoz-bar-fill" id="nb-endi" style="width:0%;background:var(--accent3)"></div>
+          </div>
+          <div class="namoz-stat-count" id="nc-endi">0</div>
+        </div>
+        <div class="namoz-stat-row">
+          <div class="namoz-stat-label">🔄 Qazo</div>
+          <div class="namoz-bar-wrap">
+            <div class="namoz-bar-fill" id="nb-qazo" style="width:0%;background:var(--red)"></div>
+          </div>
+          <div class="namoz-stat-count" id="nc-qazo">0</div>
+        </div>
       </div>
-      <div class="namoz-item">
-        <div class="namoz-left">
-          <div class="namoz-emoji">🌤</div>
-          <div>
-            <div class="namoz-name">Asr</div>
-            <div class="namoz-time" id="t-asr">--:--</div>
-          </div>
-        </div>
-        <div class="namoz-status" id="s-asr" onclick="toggleNamoz('asr')">❓</div>
-      </div>
-      <div class="namoz-item">
-        <div class="namoz-left">
-          <div class="namoz-emoji">🌆</div>
-          <div>
-            <div class="namoz-name">Shom</div>
-            <div class="namoz-time" id="t-shom">--:--</div>
-          </div>
-        </div>
-        <div class="namoz-status" id="s-shom" onclick="toggleNamoz('shom')">❓</div>
-      </div>
-      <div class="namoz-item">
-        <div class="namoz-left">
-          <div class="namoz-emoji">🌃</div>
-          <div>
-            <div class="namoz-name">Xufton</div>
-            <div class="namoz-time" id="t-xufton">--:--</div>
-          </div>
-        </div>
-        <div class="namoz-status" id="s-xufton" onclick="toggleNamoz('xufton')">❓</div>
+    </div>
+
+    <div class="namoz-info" id="namozInfo"></div>
+    <button class="add-btn" onclick="openModal('namoz')">⏰ Namoz vaqtlarini yangilash</button>
+  </div>
+
+  <!-- ZIKR SECTION -->
+  <div id="zikrSection" style="display:none">
+    <button class="add-btn" onclick="openModal('zikr')">📿 Yangi zikr qo'shish</button>
+    <div id="zikrList">
+      <div class="empty-state">
+        <div class="empty-icon">📿</div>
+        <div class="empty-text">Hali zikr yo'q.<br>Yuqoridagi tugmani bosing!</div>
       </div>
     </div>
   </div>
-
-  <div class="card">
-    <div class="card-title">Haftalik statistika</div>
-    <div class="namoz-stat-bar">
-      <div class="namoz-stat-row">
-        <div class="namoz-stat-label">✅ O'qildi</div>
-        <div class="namoz-bar-wrap">
-          <div class="namoz-bar-fill" id="nb-oqildi" style="width:0%;background:var(--green)"></div>
-        </div>
-        <div class="namoz-stat-count" id="nc-oqildi">0</div>
-      </div>
-      <div class="namoz-stat-row">
-        <div class="namoz-stat-label">⏳ Endi</div>
-        <div class="namoz-bar-wrap">
-          <div class="namoz-bar-fill" id="nb-endi" style="width:0%;background:var(--accent3)"></div>
-        </div>
-        <div class="namoz-stat-count" id="nc-endi">0</div>
-      </div>
-      <div class="namoz-stat-row">
-        <div class="namoz-stat-label">🔄 Qazo</div>
-        <div class="namoz-bar-wrap">
-          <div class="namoz-bar-fill" id="nb-qazo" style="width:0%;background:var(--red)"></div>
-        </div>
-        <div class="namoz-stat-count" id="nc-qazo">0</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="namoz-info" id="namozInfo"></div>
-  <button class="add-btn" onclick="openModal('namoz')">⏰ Namoz vaqtlarini yangilash</button>
 </div>
 
-<!-- ODATLAR & MAQSADLAR -->
+<!-- ODATLAR + CHALLENGE + BOZOR -->
 <div class="page" id="page-habits">
   <div class="tabs">
     <div class="tab active" onclick="switchHabitTab('habits',this)">🎯 Odatlar</div>
     <div class="tab" onclick="switchHabitTab('goals',this)">🏆 Maqsadlar</div>
-    <div class="tab" onclick="switchHabitTab('rewards',this)">🎁 Mukofotlar</div>
+    <div class="tab" onclick="switchHabitTab('challenge',this)">🏁 Challenge</div>
+    <div class="tab" onclick="switchHabitTab('bozor',this)">📦 Bozor</div>
+    <div class="tab" onclick="switchHabitTab('rewards',this)">🎁 Mukofot</div>
   </div>
 
+  <!-- ODATLAR -->
   <div id="habitsSection">
     <button class="add-btn" onclick="openModal('habit')">＋ Yangi odat</button>
     <div id="habitList">
@@ -947,6 +1023,7 @@
     </div>
   </div>
 
+  <!-- MAQSADLAR -->
   <div id="goalsSection" style="display:none">
     <button class="add-btn" onclick="openModal('goal')">＋ Yangi maqsad</button>
     <div id="goalList">
@@ -957,12 +1034,35 @@
     </div>
   </div>
 
+  <!-- CHALLENGE -->
+  <div id="challengeSection" style="display:none">
+    <div class="card" style="background:linear-gradient(135deg,rgba(124,106,247,0.12),rgba(78,205,196,0.06));border-color:rgba(124,106,247,0.25)">
+      <div style="font-size:13px;line-height:1.6;color:rgba(240,240,255,0.8)">
+        🏁 <b>Challenge tizimi</b> — 7, 21 yoki 30 kunlik vazifalarni qabul qiling. 70%+ bajarilsa ball olasiz!
+      </div>
+    </div>
+    <div id="challengeList">
+      <div class="empty-state"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- BOZOR (Habit Marketplace) -->
+  <div id="bozorSection" style="display:none">
+    <div class="card" style="background:linear-gradient(135deg,rgba(247,201,72,0.1),rgba(61,220,132,0.06));border-color:rgba(247,201,72,0.2)">
+      <div style="font-size:13px;line-height:1.6;color:rgba(240,240,255,0.8)">
+        📦 <b>Odat Marketplace</b> — Tayyor paketlarni o'rnating va darhol odat yo'liga kiring!
+      </div>
+    </div>
+    <div id="bozorList"></div>
+  </div>
+
+  <!-- REWARDS -->
   <div id="rewardsSection" style="display:none">
     <button class="add-btn" onclick="openModal('reward')">＋ Mukofot qo'shish</button>
     <div class="card">
       <div class="card-title">💰 Ballarim</div>
-      <div style="text-align:center;padding:10px 0">
-        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:48px;background:linear-gradient(135deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="rewardBall">0</div>
+      <div style="text-align:center;padding:8px 0">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:44px;background:linear-gradient(135deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="rewardBall">0</div>
         <div style="color:var(--muted);font-size:13px;margin-top:4px">joriy ball</div>
       </div>
     </div>
@@ -970,53 +1070,169 @@
   </div>
 </div>
 
-<!-- HISOBOT -->
-<div class="page" id="page-report">
-  <div class="period-tabs">
-    <div class="period-tab active" onclick="switchPeriod('daily',this)">Kunlik</div>
-    <div class="period-tab" onclick="switchPeriod('weekly',this)">Haftalik</div>
-    <div class="period-tab" onclick="switchPeriod('monthly',this)">Oylik</div>
+<!-- KO'PROQ: Hisobot + Reyting + Do'kon + Avatar -->
+<div class="page" id="page-more">
+  <div class="tabs">
+    <div class="tab active" onclick="switchMoreTab('hisobot',this)">📊 Hisobot</div>
+    <div class="tab" onclick="switchMoreTab('heatmap',this)">🗺 Heatmap</div>
+    <div class="tab" onclick="switchMoreTab('reyting',this)">👥 Reyting</div>
+    <div class="tab" onclick="switchMoreTab('dokon',this)">🛒 Do'kon</div>
+    <div class="tab" onclick="switchMoreTab('avatar',this)">🎭 Avatar</div>
   </div>
 
-  <div class="score-ring-wrap">
-    <div class="score-ring">
-      <svg width="80" height="80" viewBox="0 0 80 80">
-        <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
-        <circle cx="40" cy="40" r="32" fill="none" stroke="url(#ringGrad)" stroke-width="8"
-          stroke-linecap="round" stroke-dasharray="201" id="ringDash" stroke-dashoffset="201"/>
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#7c6af7"/>
-            <stop offset="100%" stop-color="#4ecdc4"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="score-ring-text">
-        <div class="score-pct" id="ringPct">0%</div>
-        <div class="score-sub">reja</div>
+  <!-- HISOBOT -->
+  <div id="hisobotSection">
+    <div class="period-tabs">
+      <div class="period-tab active" onclick="switchPeriod('daily',this)">Kunlik</div>
+      <div class="period-tab" onclick="switchPeriod('weekly',this)">Haftalik</div>
+      <div class="period-tab" onclick="switchPeriod('monthly',this)">Oylik</div>
+    </div>
+    <div class="score-ring-wrap">
+      <div class="score-ring">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
+          <circle cx="40" cy="40" r="32" fill="none" stroke="url(#ringGrad)" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="201" id="ringDash" stroke-dashoffset="201"/>
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#7c6af7"/>
+              <stop offset="100%" stop-color="#4ecdc4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="score-ring-text">
+          <div class="score-pct" id="ringPct">0%</div>
+          <div class="score-sub">reja</div>
+        </div>
+      </div>
+      <div class="score-info">
+        <div class="score-title" id="reportTitle">Bugungi hisobot</div>
+        <div class="score-rows">
+          <div class="score-row"><span>Jami reja</span><span id="repTotal">0</span></div>
+          <div class="score-row"><span>Bajarildi</span><span id="repDone">0</span></div>
+          <div class="score-row"><span>Namoz ✅</span><span id="repNamoz">0</span></div>
+        </div>
       </div>
     </div>
-    <div class="score-info">
-      <div class="score-title" id="reportTitle">Bugungi hisobot</div>
-      <div class="score-rows">
-        <div class="score-row"><span>Jami reja</span><span id="repTotal">0</span></div>
-        <div class="score-row"><span>Bajarildi</span><span id="repDone">0</span></div>
-        <div class="score-row"><span>Namoz ✅</span><span id="repNamoz">0</span></div>
+    <div class="card">
+      <div class="card-title">Reja grafigi</div>
+      <div class="chart-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(124,106,247,0.4)"></div> Jami
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--accent)"></div> Bajarildi
+        </div>
+      </div>
+      <div class="chart-wrap" id="chartWrap"></div>
+    </div>
+
+    <!-- Intizom Indeksi -->
+    <div class="card">
+      <div class="card-title">💯 Intizom Indeksi</div>
+      <div style="text-align:center;padding:10px 0">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:54px;margin-bottom:4px" id="intizomBig">–</div>
+        <div id="intizomRangBig" style="font-size:15px;font-weight:600;margin-bottom:12px">–</div>
+      </div>
+      <div class="intizom-detail" id="intizomDetail">
+        <div class="intizom-detail-row">
+          <span>📝 Reja (40pt)</span><span class="intizom-detail-val" id="iReja">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>🕌 Namoz (30pt)</span><span class="intizom-detail-val" id="iNamoz">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>🎯 Odatlar (20pt)</span><span class="intizom-detail-val" id="iOdat">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>🔥 Streak (10pt)</span><span class="intizom-detail-val" id="iStreak">–</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">Reja grafigi</div>
-    <div class="chart-legend">
-      <div class="legend-item">
-        <div class="legend-dot" style="background:rgba(124,106,247,0.4)"></div> Jami
+  <!-- HEATMAP -->
+  <div id="heatmapSection" style="display:none">
+    <div class="card">
+      <div class="card-title">🗺 30 Kunlik Faoliyat</div>
+      <div class="heatmap-legend">
+        <span>Kam</span>
+        <div class="hm-swatch" style="background:rgba(255,255,255,0.05)"></div>
+        <div class="hm-swatch" style="background:rgba(124,106,247,0.25)"></div>
+        <div class="hm-swatch" style="background:rgba(124,106,247,0.5)"></div>
+        <div class="hm-swatch" style="background:rgba(124,106,247,0.75)"></div>
+        <div class="hm-swatch" style="background:rgba(124,106,247,1)"></div>
+        <span>Ko'p</span>
       </div>
-      <div class="legend-item">
-        <div class="legend-dot" style="background:var(--accent)"></div> Bajarildi
+      <div class="heatmap-grid" id="heatmapGrid"></div>
+      <div id="heatmapInfo" style="font-size:12px;color:var(--muted);text-align:center;margin-top:6px">
+        Katakchaga bosing → tafsilot
       </div>
     </div>
-    <div class="chart-wrap" id="chartWrap"></div>
+  </div>
+
+  <!-- REYTING -->
+  <div id="reytingSection" style="display:none">
+    <div class="card" style="background:linear-gradient(135deg,rgba(247,201,72,0.1),rgba(124,106,247,0.05));border-color:rgba(247,201,72,0.2)">
+      <div style="font-size:13px;color:rgba(240,240,255,0.8)">
+        👥 Barcha foydalanuvchilar ichida TOP 10 reyting. Ball qanchalik ko'p — o'rin shunchalik yuqori!
+      </div>
+    </div>
+    <div id="ratingList">
+      <div class="empty-state"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- DO'KON -->
+  <div id="dokonSection" style="display:none">
+    <div class="card" style="background:linear-gradient(135deg,rgba(78,205,196,0.1),rgba(124,106,247,0.05));border-color:rgba(78,205,196,0.2)">
+      <div style="font-size:13px;color:rgba(240,240,255,0.8)">
+        🛒 <b>Ball Do'koni</b> — To'plangan ballaringizni sarflang!
+        <br>Joriy balansingiz: <b id="storeBalanceText" style="color:var(--accent3)">0 ball</b>
+      </div>
+    </div>
+    <div class="store-tabs tabs">
+      <div class="tab active" onclick="filterStore('all',this)">Hammasi</div>
+      <div class="tab" onclick="filterStore('avatar_style',this)">🎭 Uslub</div>
+      <div class="tab" onclick="filterStore('frame',this)">🖼 Ramka</div>
+      <div class="tab" onclick="filterStore('badge',this)">🏅 Nishon</div>
+    </div>
+    <div class="store-grid" id="storeGrid">
+      <div style="grid-column:span 2">
+        <div class="empty-state"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVATAR -->
+  <div id="avatarSection" style="display:none">
+    <div class="avatar-showcase">
+      <div class="avatar-big" id="avatarBig">👤</div>
+      <div class="avatar-info-name" id="avatarInfoName">Foydalanuvchi</div>
+      <div class="avatar-info-unvon" id="avatarInfoUnvon">🥉 Yangi boshlovchi</div>
+      <div class="avatar-xp" id="avatarXp">XP: 0</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Avatar ma'lumotlari</div>
+      <div class="intizom-detail" id="avatarDetailBox">
+        <div class="intizom-detail-row">
+          <span>🎭 Uslub</span><span class="intizom-detail-val" id="avStyle">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>🖼 Ramka</span><span class="intizom-detail-val" id="avFrame">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>🏅 Nishon</span><span class="intizom-detail-val" id="avBadge">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>⭐ Daraja</span><span class="intizom-detail-val" id="avLevel">–</span>
+        </div>
+        <div class="intizom-detail-row">
+          <span>🎖 Unvon</span><span class="intizom-detail-val" id="avUnvon">–</span>
+        </div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="switchMoreTab('dokon', document.querySelector('#page-more .tab:nth-child(4)'))">🛒 Do'konga o'tish</button>
   </div>
 </div>
 
@@ -1034,12 +1250,14 @@
   <button class="nav-item" onclick="switchPage('habits',this)">
     <span class="nav-icon">🎯</span>Odatlar
   </button>
-  <button class="nav-item" onclick="switchPage('report',this)">
-    <span class="nav-icon">📊</span>Hisobot
+  <button class="nav-item" onclick="switchPage('more',this)">
+    <span class="nav-icon">📊</span>Ko'proq
   </button>
 </nav>
 
-<!-- MODALS -->
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- TASK MODAL -->
 <div class="modal-overlay" id="modal-task" onclick="closeModalOutside(event,'modal-task')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1074,34 +1292,21 @@
   </div>
 </div>
 
+<!-- NAMOZ MODAL -->
 <div class="modal-overlay" id="modal-namoz" onclick="closeModalOutside(event,'modal-namoz')">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🕌 Namoz vaqtlari</div>
-    <div class="input-group">
-      <label class="input-label">☁️ Bomdod</label>
-      <input class="input-field" id="n-bomdod" type="time">
-    </div>
-    <div class="input-group">
-      <label class="input-label">🌞 Peshin</label>
-      <input class="input-field" id="n-peshin" type="time">
-    </div>
-    <div class="input-group">
-      <label class="input-label">🌤 Asr</label>
-      <input class="input-field" id="n-asr" type="time">
-    </div>
-    <div class="input-group">
-      <label class="input-label">🌆 Shom</label>
-      <input class="input-field" id="n-shom" type="time">
-    </div>
-    <div class="input-group">
-      <label class="input-label">🌃 Xufton</label>
-      <input class="input-field" id="n-xufton" type="time">
-    </div>
+    <div class="input-group"><label class="input-label">☁️ Bomdod</label><input class="input-field" id="n-bomdod" type="time"></div>
+    <div class="input-group"><label class="input-label">🌞 Peshin</label><input class="input-field" id="n-peshin" type="time"></div>
+    <div class="input-group"><label class="input-label">🌤 Asr</label><input class="input-field" id="n-asr" type="time"></div>
+    <div class="input-group"><label class="input-label">🌆 Shom</label><input class="input-field" id="n-shom" type="time"></div>
+    <div class="input-group"><label class="input-label">🌃 Xufton</label><input class="input-field" id="n-xufton" type="time"></div>
     <button class="modal-btn" onclick="saveNamoz()">✅ Saqlash (7 kun)</button>
   </div>
 </div>
 
+<!-- HABIT MODAL -->
 <div class="modal-overlay" id="modal-habit" onclick="closeModalOutside(event,'modal-habit')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1123,10 +1328,11 @@
         <div class="select-chip" onclick="selectChip(this,'emoji')">🍎</div>
       </div>
     </div>
-    <button class="modal-btn" onclick="saveHabit()">✅ Saqlash</button>
+    <button class="modal-btn" onclick="saveHabit()">✅ Saqlash (+5 ball)</button>
   </div>
 </div>
 
+<!-- GOAL MODAL -->
 <div class="modal-overlay" id="modal-goal" onclick="closeModalOutside(event,'modal-goal')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1147,6 +1353,7 @@
   </div>
 </div>
 
+<!-- REWARD MODAL -->
 <div class="modal-overlay" id="modal-reward" onclick="closeModalOutside(event,'modal-reward')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1157,65 +1364,108 @@
     </div>
     <div class="input-group">
       <label class="input-label">Mukofot nomi</label>
-      <input class="input-field" id="rewardName" placeholder="Masalan: Kino ko'rish">
+      <input class="input-field" id="rewardName" placeholder="Masalan: Kino tomosha qilaman">
     </div>
     <div class="input-group">
-      <label class="input-label">Ball miqdori</label>
+      <label class="input-label">Narxi (ball)</label>
       <input class="input-field" id="rewardCost" type="number" placeholder="Masalan: 50" min="1">
     </div>
     <button class="modal-btn" onclick="saveReward()">🎁 Mukofot olish</button>
   </div>
 </div>
 
+<!-- ZIKR MODAL -->
+<div class="modal-overlay" id="modal-zikr" onclick="closeModalOutside(event,'modal-zikr')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📿 Yangi zikr</div>
+    <div class="input-group">
+      <label class="input-label">Zikr nomi</label>
+      <input class="input-field" id="zikrName" placeholder="Masalan: SubhonAlloh">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Emoji</label>
+      <div class="select-row" id="zikrEmojiSelect">
+        <div class="select-chip selected" onclick="selectChip(this,'zemoji')">📿</div>
+        <div class="select-chip" onclick="selectChip(this,'zemoji')">🤲</div>
+        <div class="select-chip" onclick="selectChip(this,'zemoji')">✨</div>
+        <div class="select-chip" onclick="selectChip(this,'zemoji')">🌙</div>
+        <div class="select-chip" onclick="selectChip(this,'zemoji')">☪️</div>
+        <div class="select-chip" onclick="selectChip(this,'zemoji')">💫</div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Kunlik maqsad</label>
+      <div class="select-row" id="zikrTargetSelect">
+        <div class="select-chip" onclick="selectChip(this,'ztarget')">33</div>
+        <div class="select-chip selected" onclick="selectChip(this,'ztarget')">100</div>
+        <div class="select-chip" onclick="selectChip(this,'ztarget')">300</div>
+        <div class="select-chip" onclick="selectChip(this,'ztarget')">500</div>
+        <div class="select-chip" onclick="selectChip(this,'ztarget')">1000</div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="saveZikr()">✅ Saqlash</button>
+  </div>
+</div>
+
 <script>
-// ─────────────────────────────────────────────────────────────────────
-// ⚙️ SOZLAMALAR — bot API manzili (Render)
-// ─────────────────────────────────────────────────────────────────────
-const API_BASE = "https://tg-bot-p2gy.onrender.com";
-
+// ─── CONFIG ────────────────────────────────────────────────────────────
 const tg = window.Telegram?.WebApp;
-const initData = tg?.initData || "";
+const initData = tg?.initData || '';
+const API_BASE = '';
 
-let S = null;               // /api/data dan kelgan to'liq holat
-let currentTaskTab = 'daily';
-let currentHabitTab = 'habits';
-let currentPeriod = 'daily';
+// ─── STATE ─────────────────────────────────────────────────────────────
+let S = null;
+let currentTaskTab   = 'daily';
+let currentHabitTab  = 'habits';
+let currentPeriod    = 'daily';
+let currentMoreTab   = 'hisobot';
+let currentNamozTab  = 'namoz';
+let currentStoreFilter = 'all';
+let storeItems = [];
 
-const MOTIVLAR = [
-  "🌟 Har bir qadam oldinga — g'alaba sari!",
-  "💪 Bugun qiyin, ertaga oson. Davom eting!",
-  "🎯 Maqsadingizga har kuni bir qadam yaqinlashing!",
-  "🔥 Kichik harakatlar katta natijalarga olib keladi!",
-  "⭐ Siz bugungi eng yaxshi versiyangiz bo'ling!",
-  "🚀 Izchillik — muvaffaqiyatning kaliti!",
-];
-
-const UNVON_THRESHOLDS = [0, 100, 300, 600, 1000, 2000];
-
-const PRIORITY_CODE  = {"🔴 Shoshilinch":"shoshilinch", "🟡 O'rta":"orta", "🟢 Oddiy":"oddiy"};
-const PRIORITY_LABEL = {"shoshilinch":"🔴 Shoshilinch", "orta":"🟡 O'rta", "oddiy":"🟢 Oddiy"};
-
+// ─── CONSTANTS ─────────────────────────────────────────────────────────
 const NAMOZ_ORDER = ['bomdod','peshin','asr','shom','xufton'];
-const NAMOZ_CYCLE = [null, 'oqildi', 'endi', 'qazo'];
+const NAMOZ_CYCLE = [null,'oqildi','endi','qazo'];
 const NAMOZ_EMOJI = { oqildi:'✅', endi:'⏳', qazo:'🔄', null:'❓' };
-const NAMOZ_TOAST = {
-  oqildi: "✅ Barakalla! O'qildi!",
-  endi:   "⏳ Endi o'qing!",
-  qazo:   "🔄 Qazo belgilandi",
+const NAMOZ_TOAST = { oqildi:"✅ Barakalla!", endi:"⏳ Endi o'qing!", qazo:"🔄 Qazo belgilandi" };
+const PRIORITY_LABEL = { shoshilinch:'🔴 Shoshilinch', orta:'🟡 O\'rta', oddiy:'🟢 Oddiy' };
+const PRIORITY_CODE  = { '🔴 Shoshilinch':'shoshilinch', '🟡 O\'rta':'orta', '🟢 Oddiy':'oddiy' };
+const UNVON_THRESHOLDS = [0,100,300,600,1000,2000,3500,5500,8000,12000];
+
+const AVATAR_STYLES = {
+  'Standart': '👤', 'Yulduz': '⭐', 'Oltin': '🌟', 'Olmos': '💎',
+  'Qilich': '⚔️', 'Muhandis': '👨‍💻', 'Sportchi': '🏃', 'Donishmand': '🧙'
 };
 
-function today() {
-  return new Date().toISOString().split('T')[0];
-}
+const MOTIVLAR = [
+  "💪 Har bir qadam muvaffaqiyatga olib boradi!",
+  "🔥 Bugun ham ajoyib bo'lasiz!",
+  "⭐ Kichik qadam, katta natija!",
+  "🎯 Maqsad — harakat — natija!",
+  "🌙 Tun qorongu, erta tong yorug'!",
+  "💡 Orzular — harakatning boshlanishi!",
+  "🏆 G'olib har kuni harakat qiladi!",
+  "🌱 Har kuni o'sish — muvaffaqiyat siri!",
+  "✨ Bugungi sa'y-harakat ertangi g'alaba!",
+  "🦁 Kuchli odam har kuni o'zini yengadi!"
+];
 
-// ── API HELPERS ─────────────────────────────────────────────────────────
+const BOZOR_PAKETLAR = [
+  { emoji:'🕌', nomi:'5 Vaqt Namoz', tavsif:'Barcha 5 vaqt namozni kuzatish', odatlar:['Bomdod ✅','Peshin ✅','Asr ✅','Shom ✅','Xufton ✅'] },
+  { emoji:'🏋️', nomi:'Sport Paketi', tavsif:'Jismoniy faollik odatlari', odatlar:['Ertalab yugurish 🏃','Suvdan ichish 💧','Mashq 💪','Yog\'och yurish 🚶'] },
+  { emoji:'📚', nomi:'Bilim Paketi', tavsif:'Intellektual rivojlanish', odatlar:['Kitob o\'qish 📖','Inglizcha 🇬🇧','Matematika 🔢','Podcast tinglash 🎧'] },
+  { emoji:'🎯', nomi:'SAT Paketi', tavsif:'Imtihonga tayyorlanish', odatlar:['Inglizcha so\'z 📝','Math mashq ➗','Reading ✍️','Takrorlash 🔄'] },
+  { emoji:'💚', nomi:'Sog\'liq Paketi', tavsif:'Sog\'lom turmush tarzi', odatlar:['Suv 2L 💧','Uxlash 23:00 😴','Vitaminlar 💊','Qand emas 🚫'] }
+];
+
+// ─── API ───────────────────────────────────────────────────────────────
+function today() { return new Date().toISOString().split('T')[0]; }
+
 async function apiGet(path, params = {}) {
   const p = new URLSearchParams({ ...params, init_data: initData });
   const res = await fetch(`${API_BASE}${path}?${p.toString()}`);
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || ('HTTP ' + res.status));
-  }
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'HTTP ' + res.status); }
   return res.json();
 }
 
@@ -1225,18 +1475,14 @@ async function apiPost(path, body = {}) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...body, init_data: initData }),
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || ('HTTP ' + res.status));
-  }
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'HTTP ' + res.status); }
   return res.json();
 }
 
-// ── INIT ───────────────────────────────────────────────────────────────
+// ─── INIT ──────────────────────────────────────────────────────────────
 function initTg() {
   if (tg) {
-    tg.ready();
-    tg.expand();
+    tg.ready(); tg.expand();
     tg.setHeaderColor('#0a0a0f');
     tg.setBackgroundColor('#0a0a0f');
   }
@@ -1244,7 +1490,6 @@ function initTg() {
 
 async function init() {
   initTg();
-
   const loadingOverlay = document.getElementById('loadingOverlay');
   const errorOverlay   = document.getElementById('errorOverlay');
   const loadingText    = document.getElementById('loadingText');
@@ -1252,18 +1497,17 @@ async function init() {
 
   errorOverlay.classList.add('hidden');
   loadingOverlay.classList.remove('hidden');
-  loadingText.textContent = "Ma'lumotlar yuklanmoqda, biroz kuting.";
+  loadingText.textContent = "Ma'lumotlar yuklanmoqda...";
 
   if (!initData) {
     loadingOverlay.classList.add('hidden');
     errorOverlay.classList.remove('hidden');
-    errorText.textContent = "Bu ilova faqat Telegram ichidan ochilganda ishlaydi. Botda /start yoki /app buyrug'ini yuboring.";
+    errorText.textContent = "Bu ilova faqat Telegram ichidan ochilganda ishlaydi.";
     return;
   }
 
-  // Render bepul server uxlab qolgan bo'lsa, birinchi so'rov 50 soniyagacha davom etishi mumkin
   const slowTimer = setTimeout(() => {
-    loadingText.textContent = "Server uyg'onmoqda... Bu birinchi marta 50 soniyagacha davom etishi mumkin ⏳";
+    loadingText.textContent = "Server uyg'onmoqda... ⏳ 50 soniyagacha kuting";
   }, 6000);
 
   try {
@@ -1275,18 +1519,13 @@ async function init() {
     clearTimeout(slowTimer);
     loadingOverlay.classList.add('hidden');
     errorOverlay.classList.remove('hidden');
-    errorText.textContent = "Serverga ulanmadi: " + e.message + "\n\nBiroz kutib qayta urinib ko'ring.";
+    errorText.textContent = "Ulanmadi: " + e.message;
   }
 }
 
-async function loadData() {
-  S = await apiGet('/api/data');
-}
+async function loadData() { S = await apiGet('/api/data'); }
 
-async function refresh() {
-  await loadData();
-  renderAll();
-}
+async function refresh() { await loadData(); renderAll(); }
 
 function renderAll() {
   renderHome();
@@ -1295,9 +1534,11 @@ function renderAll() {
   renderHabits();
   renderGoals();
   renderRewards();
+  renderZikr();
+  renderBozor();
 }
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────
+// ─── NAVIGATION ────────────────────────────────────────────────────────
 function switchPage(page, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1306,9 +1547,15 @@ function switchPage(page, el) {
 
   if (page === 'home')   renderHome();
   if (page === 'tasks')  renderTasks();
-  if (page === 'namoz')  renderNamoz();
-  if (page === 'habits') { renderHabits(); renderGoals(); renderRewards(); }
-  if (page === 'report') loadReport(currentPeriod);
+  if (page === 'namoz')  { renderNamoz(); renderZikr(); }
+  if (page === 'habits') { renderHabits(); renderGoals(); renderRewards(); renderBozor(); }
+  if (page === 'more')   {
+    if (currentMoreTab === 'hisobot') loadReport(currentPeriod);
+    if (currentMoreTab === 'reyting') loadRating();
+    if (currentMoreTab === 'dokon')   loadStore();
+    if (currentMoreTab === 'heatmap') loadHeatmap();
+    if (currentMoreTab === 'avatar')  renderAvatarPage();
+  }
 }
 
 function switchTab(tab, el) {
@@ -1318,15 +1565,47 @@ function switchTab(tab, el) {
   renderTasks();
 }
 
+function switchNamozTab(tab, el) {
+  currentNamozTab = tab;
+  document.querySelectorAll('#page-namoz .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('namozSection').style.display = tab === 'namoz' ? '' : 'none';
+  document.getElementById('zikrSection').style.display  = tab === 'zikr'  ? '' : 'none';
+  if (tab === 'zikr') renderZikr();
+}
+
 function switchHabitTab(tab, el) {
   currentHabitTab = tab;
   document.querySelectorAll('#page-habits .tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('habitsSection').style.display  = tab === 'habits'  ? '' : 'none';
-  document.getElementById('goalsSection').style.display   = tab === 'goals'   ? '' : 'none';
-  document.getElementById('rewardsSection').style.display = tab === 'rewards' ? '' : 'none';
+  document.getElementById('habitsSection').style.display   = tab === 'habits'    ? '' : 'none';
+  document.getElementById('goalsSection').style.display    = tab === 'goals'     ? '' : 'none';
+  document.getElementById('challengeSection').style.display= tab === 'challenge' ? '' : 'none';
+  document.getElementById('bozorSection').style.display    = tab === 'bozor'     ? '' : 'none';
+  document.getElementById('rewardsSection').style.display  = tab === 'rewards'   ? '' : 'none';
   if (tab === 'rewards') renderRewards();
   if (tab === 'goals') renderGoals();
+  if (tab === 'challenge') loadChallenge();
+  if (tab === 'bozor') renderBozor();
+}
+
+function switchMoreTab(tab, el) {
+  currentMoreTab = tab;
+  if (el) {
+    document.querySelectorAll('#page-more .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  document.getElementById('hisobotSection').style.display = tab === 'hisobot' ? '' : 'none';
+  document.getElementById('heatmapSection').style.display = tab === 'heatmap' ? '' : 'none';
+  document.getElementById('reytingSection').style.display = tab === 'reyting' ? '' : 'none';
+  document.getElementById('dokonSection').style.display   = tab === 'dokon'   ? '' : 'none';
+  document.getElementById('avatarSection').style.display  = tab === 'avatar'  ? '' : 'none';
+
+  if (tab === 'hisobot') loadReport(currentPeriod);
+  if (tab === 'reyting') loadRating();
+  if (tab === 'dokon')   loadStore();
+  if (tab === 'heatmap') loadHeatmap();
+  if (tab === 'avatar')  renderAvatarPage();
 }
 
 function switchPeriod(period, el) {
@@ -1336,12 +1615,10 @@ function switchPeriod(period, el) {
   loadReport(period);
 }
 
-// ── MODAL ──────────────────────────────────────────────────────────────
+// ─── MODAL ─────────────────────────────────────────────────────────────
 function openModal(type) {
-  if (type === 'reward') {
-    document.getElementById('modalBallShow').textContent = S.user.ball;
-  }
-  if (type === 'namoz' && S.namoz_times) {
+  if (type === 'reward') document.getElementById('modalBallShow').textContent = S?.user?.ball || 0;
+  if (type === 'namoz' && S?.namoz_times) {
     NAMOZ_ORDER.forEach(k => {
       const el = document.getElementById('n-' + k);
       if (el) el.value = S.namoz_times[k] || '';
@@ -1349,41 +1626,39 @@ function openModal(type) {
   }
   document.getElementById('modal-' + type).classList.add('open');
 }
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-function closeModalOutside(e, id) {
-  if (e.target === document.getElementById(id)) closeModal(id);
-}
-
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalOutside(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
 function selectChip(el, group) {
-  const parent = el.parentElement;
-  parent.querySelectorAll('.select-chip').forEach(c => c.classList.remove('selected'));
+  el.parentElement.querySelectorAll('.select-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
 }
-
 function getSelected(parentId) {
   const el = document.querySelector(`#${parentId} .select-chip.selected`);
   return el ? el.textContent.trim() : '';
 }
 
-// ── HOME ───────────────────────────────────────────────────────────────
+// ─── HOME ──────────────────────────────────────────────────────────────
 function renderHome() {
   if (!S) return;
-  const { user, unvon, next_unvon, next_ball, daily_tasks, namoz_today, habits } = S;
+  const { user, unvon, next_ball, daily_tasks, namoz_today, habits, intizom_score, intizom_rang, avatar, active_challenges } = S;
 
   document.getElementById('userName').textContent = user.name;
   document.getElementById('userBall').textContent = user.ball;
   document.getElementById('headerBall').textContent = '💰 ' + user.ball + ' ball';
   document.getElementById('rewardBall').textContent = user.ball;
+  document.getElementById('storeBalanceText').textContent = user.ball + ' ball';
   document.getElementById('userUnvon').textContent = unvon;
   document.getElementById('unvonName').textContent = unvon;
 
+  // Avatar
+  const avatarStyle = avatar?.style || 'Standart';
+  const avatarEmoji = AVATAR_STYLES[avatarStyle] || '👤';
+  document.getElementById('homeAvatarEmoji').textContent = avatarEmoji;
+  document.getElementById('homeAvatarBadge').textContent = avatar?.badge ? '🏅' : '';
+
+  // Unvon progress
   let prev = 0;
   for (const t of UNVON_THRESHOLDS) if (user.ball >= t) prev = t;
-
   if (next_ball) {
     const pct = Math.min(100, ((user.ball - prev) / (next_ball - prev)) * 100);
     document.getElementById('unvonProgress').style.width = pct + '%';
@@ -1393,29 +1668,42 @@ function renderHome() {
     document.getElementById('unvonNext').textContent = 'Maksimal unvon! 👑';
   }
 
-  document.getElementById('motivCard').textContent =
-    MOTIVLAR[Math.floor(Math.random() * MOTIVLAR.length)];
+  // Intizom
+  document.getElementById('homeIntizom').textContent = intizom_score ?? 0;
+  document.getElementById('homeIntizomRang').textContent = intizom_rang || '–';
+
+  // Motivatsiya
+  document.getElementById('motivCard').textContent = MOTIVLAR[Math.floor(Math.random() * MOTIVLAR.length)];
 
   // Stats
-  const done = daily_tasks.filter(t => t.status === 1).length;
-  const pct  = daily_tasks.length ? Math.round(done / daily_tasks.length * 100) : 0;
-  document.getElementById('statReja').textContent = daily_tasks.length;
+  const done = (daily_tasks || []).filter(t => t.status === 1).length;
+  const pct  = (daily_tasks || []).length ? Math.round(done / daily_tasks.length * 100) : 0;
+  document.getElementById('statReja').textContent = (daily_tasks || []).length;
   document.getElementById('statBajarildi').textContent = pct + '%';
 
   const namozOq = Object.values(namoz_today || {}).filter(v => v === 'oqildi').length;
   document.getElementById('statNamoz').textContent = namozOq;
 
-  const maxStreak = habits.length ? Math.max(...habits.map(h => h.streak)) : 0;
+  const maxStreak = (habits || []).length ? Math.max(...habits.map(h => h.streak)) : 0;
   document.getElementById('statOdat').textContent = maxStreak;
+  document.getElementById('homeStreak').textContent = maxStreak;
+
+  // Active challenges strip
+  if ((active_challenges || []).length > 0) {
+    document.getElementById('activeChallengesStrip').style.display = '';
+    document.getElementById('activeChallengesRow').innerHTML =
+      active_challenges.map(c => `<div class="active-ch-chip">${c.emoji} ${c.title}</div>`).join('');
+  } else {
+    document.getElementById('activeChallengesStrip').style.display = 'none';
+  }
 }
 
-// ── TASKS ──────────────────────────────────────────────────────────────
+// ─── TASKS ─────────────────────────────────────────────────────────────
 function renderTasks() {
-  const list = document.getElementById('taskList');
   if (!S) return;
-
+  const list = document.getElementById('taskList');
   if (currentTaskTab === 'daily') {
-    const source = S.daily_tasks;
+    const source = S.daily_tasks || [];
     if (!source.length) {
       list.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Hali reja yo'q.<br>Yuqoridagi tugmani bosing!</div></div>`;
       return;
@@ -1435,13 +1723,16 @@ function renderTasks() {
             ${t.category || ''} · ${priLabel}
           </div>
         </div>
-        <div class="task-time">${t.task_time}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="task-time">${t.task_time}</div>
+          <div onclick="event.stopPropagation();deleteTask(${t.id})" style="font-size:16px;color:var(--red);cursor:pointer">🗑</div>
+        </div>
       </div>`;
     }).join('');
   } else {
-    const source = S.weekly_tasks;
+    const source = S.weekly_tasks || [];
     if (!source.length) {
-      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Hali haftalik reja yo'q.<br>Bu rejalar har kuni eslatiladi!</div></div>`;
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Hali haftalik reja yo'q.</div></div>`;
       return;
     }
     list.innerHTML = source.map(t => {
@@ -1457,9 +1748,9 @@ function renderTasks() {
             ${t.category || ''} · ${priLabel}
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
           <div class="task-time">${t.task_time}</div>
-          <div onclick="event.stopPropagation();deleteWeekly(${t.id})" style="font-size:18px;color:var(--red);cursor:pointer">🗑</div>
+          <div onclick="deleteWeekly(${t.id})" style="font-size:16px;color:var(--red);cursor:pointer">🗑</div>
         </div>
       </div>`;
     }).join('');
@@ -1467,34 +1758,24 @@ function renderTasks() {
 }
 
 async function toggleTask(id) {
-  try {
-    await apiPost('/api/task/toggle', { id });
-    await refresh();
-    showToast('✅ Yangilandi!');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  try { await apiPost('/api/task/toggle', { id }); await refresh(); showToast('✅ Yangilandi!'); }
+  catch (e) { showToast('❌ ' + e.message); }
 }
-
+async function deleteTask(id) {
+  try { await apiPost('/api/task/delete', { id }); await refresh(); showToast('🗑 O\'chirildi'); }
+  catch (e) { showToast('❌ ' + e.message); }
+}
 async function deleteWeekly(id) {
-  try {
-    await apiPost('/api/weekly/delete', { id });
-    await refresh();
-    showToast('🗑 O\'chirildi');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  try { await apiPost('/api/weekly/delete', { id }); await refresh(); showToast('🗑 O\'chirildi'); }
+  catch (e) { showToast('❌ ' + e.message); }
 }
-
 async function saveTask() {
   const name = document.getElementById('taskName').value.trim();
   const time = document.getElementById('taskTime').value;
   if (!name || !time) { showToast('❌ Ism va vaqt kiriting!'); return; }
-
   const category = getSelected('catSelect');
   const priorityLabel = getSelected('priSelect');
   const priority = PRIORITY_CODE[priorityLabel] || 'oddiy';
-
   try {
     if (currentTaskTab === 'daily') {
       await apiPost('/api/task/add', { name, time, category, priority });
@@ -1505,19 +1786,15 @@ async function saveTask() {
     closeModal('modal-task');
     document.getElementById('taskName').value = '';
     document.getElementById('taskTime').value = '';
-    renderTasks();
     showToast('✅ Reja saqlandi!');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  } catch (e) { showToast('❌ ' + e.message); }
 }
 
-// ── NAMOZ ──────────────────────────────────────────────────────────────
+// ─── NAMOZ ─────────────────────────────────────────────────────────────
 function renderNamoz() {
   if (!S) return;
   const nt = S.namoz_times || {};
   const today_ = S.namoz_today || {};
-
   NAMOZ_ORDER.forEach(n => {
     document.getElementById('t-' + n).textContent = nt[n] || '--:--';
     const stat = today_[n] || null;
@@ -1525,37 +1802,31 @@ function renderNamoz() {
     el.className = 'namoz-status' + (stat ? ' ' + stat : '');
     el.textContent = NAMOZ_EMOJI[stat] || NAMOZ_EMOJI[null];
   });
-
   const infoEl = document.getElementById('namozInfo');
   if (S.namoz_times && S.namoz_days_left !== null && S.namoz_days_left !== undefined) {
     infoEl.textContent = `⏰ Joriy vaqtlar yana ${S.namoz_days_left} kun amal qiladi`;
   } else {
     infoEl.textContent = '⚠️ Namoz vaqtlari kiritilmagan';
   }
-
-  const week = S.namoz_week || { oqildi: 0, endi: 0, qazo: 0 };
-  const total = (week.oqildi || 0) + (week.endi || 0) + (week.qazo || 0);
-  const mx = total || 1;
-  document.getElementById('nb-oqildi').style.width = (week.oqildi / mx * 100) + '%';
-  document.getElementById('nb-endi').style.width   = (week.endi   / mx * 100) + '%';
-  document.getElementById('nb-qazo').style.width   = (week.qazo   / mx * 100) + '%';
+  const week = S.namoz_week || { oqildi:0, endi:0, qazo:0 };
+  const mx = Math.max((week.oqildi||0)+(week.endi||0)+(week.qazo||0), 1);
+  document.getElementById('nb-oqildi').style.width = ((week.oqildi||0)/mx*100) + '%';
+  document.getElementById('nb-endi').style.width   = ((week.endi||0)/mx*100) + '%';
+  document.getElementById('nb-qazo').style.width   = ((week.qazo||0)/mx*100) + '%';
   document.getElementById('nc-oqildi').textContent = week.oqildi || 0;
   document.getElementById('nc-endi').textContent   = week.endi || 0;
   document.getElementById('nc-qazo').textContent   = week.qazo || 0;
 }
 
 async function toggleNamoz(name) {
-  const current = (S.namoz_today || {})[name] || null;
+  const current = (S?.namoz_today || {})[name] || null;
   const idx = NAMOZ_CYCLE.indexOf(current);
   const next = NAMOZ_CYCLE[(idx + 1) % NAMOZ_CYCLE.length];
-
   try {
     await apiPost('/api/namoz/mark', { namoz: name, holat: next });
     await refresh();
     showToast(next ? NAMOZ_TOAST[next] : '↩️ Bekor qilindi');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  } catch (e) { showToast('❌ ' + e.message); }
 }
 
 async function saveNamoz() {
@@ -1567,22 +1838,82 @@ async function saveNamoz() {
     vals[n] = v;
   });
   if (!ok) { showToast('❌ Barcha vaqtlarni kiriting!'); return; }
-
   try {
     await apiPost('/api/namoz/times', vals);
     await refresh();
     closeModal('modal-namoz');
     showToast('✅ Namoz vaqtlari saqlandi!');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  } catch (e) { showToast('❌ ' + e.message); }
 }
 
-// ── HABITS ─────────────────────────────────────────────────────────────
+// ─── ZIKR ──────────────────────────────────────────────────────────────
+function renderZikr() {
+  if (!S) return;
+  const list = document.getElementById('zikrList');
+  const zikrs = S.zikrs || [];
+  if (!zikrs.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📿</div><div class="empty-text">Hali zikr yo'q.<br>Yangi zikr qo'shing!</div></div>`;
+    return;
+  }
+  list.innerHTML = zikrs.map(z => {
+    const pct = z.target_count > 0 ? Math.min(100, Math.round(z.today_count / z.target_count * 100)) : 0;
+    return `
+    <div class="zikr-card">
+      <div class="zikr-header">
+        <div class="zikr-emoji">${z.emoji}</div>
+        <div class="zikr-name-block">
+          <div class="zikr-name">${z.name}</div>
+          <div class="zikr-today">Bugun: ${z.today_count} / ${z.target_count}</div>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:${pct>=100?'var(--green)':'var(--muted)'}">${pct}%</div>
+      </div>
+      <div class="zikr-count-big">${z.today_count}</div>
+      <div class="zikr-target">Maqsad: ${z.target_count} marta</div>
+      <div class="zikr-progress-bar">
+        <div class="zikr-progress-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="zikr-btns">
+        <div class="zikr-btn" onclick="clickZikr(${z.id},1)">+1</div>
+        <div class="zikr-btn" onclick="clickZikr(${z.id},10)">+10</div>
+        <div class="zikr-btn" onclick="clickZikr(${z.id},33)">+33</div>
+        <div class="zikr-btn" onclick="clickZikr(${z.id},100)">+100</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function clickZikr(id, amount) {
+  try {
+    await apiPost('/api/zikr/click', { id, amount });
+    const z = S.zikrs.find(x => x.id === id);
+    if (z) {
+      z.today_count = (z.today_count || 0) + amount;
+      renderZikr();
+    }
+    showToast(`📿 +${amount} sanaldi!`);
+  } catch (e) { showToast('❌ ' + e.message); }
+}
+
+async function saveZikr() {
+  const name = document.getElementById('zikrName').value.trim();
+  if (!name) { showToast('❌ Nom kiriting!'); return; }
+  const emoji = getSelected('zikrEmojiSelect') || '📿';
+  const targetText = getSelected('zikrTargetSelect') || '100';
+  const target = parseInt(targetText) || 100;
+  try {
+    await apiPost('/api/zikr/add', { name, emoji, target });
+    await refresh();
+    closeModal('modal-zikr');
+    document.getElementById('zikrName').value = '';
+    showToast('✅ Zikr qo\'shildi!');
+  } catch (e) { showToast('❌ ' + e.message); }
+}
+
+// ─── HABITS ────────────────────────────────────────────────────────────
 function renderHabits() {
   if (!S) return;
   const list = document.getElementById('habitList');
-  if (!S.habits.length) {
+  if (!(S.habits || []).length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-text">Hali odat yo'q.</div></div>`;
     return;
   }
@@ -1598,36 +1929,27 @@ function renderHabits() {
 }
 
 async function toggleHabit(id) {
-  try {
-    await apiPost('/api/habit/toggle', { id });
-    await refresh();
-    showToast('✅ Yangilandi!');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  try { await apiPost('/api/habit/toggle', { id }); await refresh(); showToast('✅ Yangilandi!'); }
+  catch (e) { showToast('❌ ' + e.message); }
 }
-
 async function saveHabit() {
   const name = document.getElementById('habitName').value.trim();
   if (!name) { showToast('❌ Nom kiriting!'); return; }
   const emoji = getSelected('emojiSelect') || '✅';
-
   try {
     await apiPost('/api/habit/add', { name, emoji });
     await refresh();
     closeModal('modal-habit');
     document.getElementById('habitName').value = '';
     showToast('✅ Odat qo\'shildi! +5 ball');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  } catch (e) { showToast('❌ ' + e.message); }
 }
 
-// ── GOALS ──────────────────────────────────────────────────────────────
+// ─── GOALS ─────────────────────────────────────────────────────────────
 function renderGoals() {
   if (!S) return;
   const list = document.getElementById('goalList');
-  if (!S.goals.length) {
+  if (!(S.goals || []).length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-icon">🏆</div><div class="empty-text">Hali maqsad yo'q.</div></div>`;
     return;
   }
@@ -1635,7 +1957,7 @@ function renderGoals() {
   list.innerHTML = S.goals.map(g => {
     const created  = new Date(g.created);
     const deadline = new Date(g.deadline);
-    const total  = Math.max(1, (deadline - created) / 86400000);
+    const total = Math.max(1, (deadline - created) / 86400000);
     const passed = (now - created) / 86400000;
     const pct = Math.min(100, Math.max(0, Math.round(passed / total * 100)));
     const daysLeft = Math.max(0, Math.ceil((deadline - now) / 86400000));
@@ -1653,7 +1975,7 @@ function renderGoals() {
       <div class="goal-progress">
         <div class="goal-progress-fill" style="width:${pct}%"></div>
       </div>
-      ${g.status === 'active' ? `<button class="add-btn" style="margin-top:12px;margin-bottom:0" onclick="completeGoal(${g.id})">✅ Bajarildi!</button>` : ''}
+      ${g.status === 'active' ? `<button class="add-btn" style="margin-top:10px;margin-bottom:0" onclick="completeGoal(${g.id})">✅ Bajarildi!</button>` : ''}
     </div>`;
   }).join('');
 }
@@ -1663,18 +1985,14 @@ async function completeGoal(id) {
     const g = S.goals.find(x => x.id === id);
     await apiPost('/api/goal/complete', { id });
     await refresh();
-    showToast(`🎉 Tabriklaymiz! +${g ? g.ball_reward : 100} ball!`);
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+    showToast(`🎉 Tabrik! +${g ? g.ball_reward : 100} ball!`);
+  } catch (e) { showToast('❌ ' + e.message); }
 }
-
 async function saveGoal() {
   const title  = document.getElementById('goalTitle').value.trim();
   const days   = parseInt(document.getElementById('goalDays').value);
   const reward = document.getElementById('goalReward').value.trim();
   if (!title || !days || !reward) { showToast('❌ Barcha maydonlarni to\'ldiring!'); return; }
-
   try {
     await apiPost('/api/goal/add', { title, days, reward });
     await refresh();
@@ -1683,17 +2001,15 @@ async function saveGoal() {
     document.getElementById('goalDays').value = '';
     document.getElementById('goalReward').value = '';
     showToast('✅ Maqsad saqlandi! +10 ball');
-  } catch (e) {
-    showToast('❌ Xatolik: ' + e.message);
-  }
+  } catch (e) { showToast('❌ ' + e.message); }
 }
 
-// ── REWARDS ────────────────────────────────────────────────────────────
+// ─── REWARDS ───────────────────────────────────────────────────────────
 function renderRewards() {
   if (!S) return;
   document.getElementById('rewardBall').textContent = S.user.ball;
   const list = document.getElementById('rewardList');
-  if (!S.rewards.length) { list.innerHTML = ''; return; }
+  if (!(S.rewards || []).length) { list.innerHTML = ''; return; }
   list.innerHTML = `<div class="card"><div class="card-title">Olingan mukofotlar</div>` +
     S.rewards.map(r => `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
@@ -1704,12 +2020,10 @@ function renderRewards() {
       <div style="font-family:Syne,sans-serif;font-weight:700;color:var(--red)">-${r.ball_cost} ball</div>
     </div>`).join('') + '</div>';
 }
-
 async function saveReward() {
   const name = document.getElementById('rewardName').value.trim();
   const cost = parseInt(document.getElementById('rewardCost').value);
   if (!name || !cost) { showToast('❌ To\'ldiring!'); return; }
-
   try {
     await apiPost('/api/reward/add', { name, cost });
     await refresh();
@@ -1718,25 +2032,115 @@ async function saveReward() {
     document.getElementById('rewardCost').value = '';
     showToast('🎁 Mukofot olindi!');
   } catch (e) {
-    if (e.message === 'insufficient_ball') {
-      showToast('❌ Ball yetarli emas!');
-    } else {
-      showToast('❌ Xatolik: ' + e.message);
-    }
+    if (e.message === 'insufficient_ball') showToast('❌ Ball yetarli emas!');
+    else showToast('❌ ' + e.message);
   }
 }
 
-// ── REPORT ─────────────────────────────────────────────────────────────
+// ─── CHALLENGE ─────────────────────────────────────────────────────────
+async function loadChallenge() {
+  const list = document.getElementById('challengeList');
+  try {
+    const data = await apiGet('/api/challenge/list');
+    if (!data.challenges.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">🏁</div><div class="empty-text">Hozircha challenge yo'q</div></div>`;
+      return;
+    }
+    list.innerHTML = data.challenges.map(c => `
+    <div class="challenge-card">
+      <div class="challenge-header">
+        <div class="challenge-emoji">${c.emoji}</div>
+        <div>
+          <div class="challenge-title">${c.title}</div>
+          <div class="challenge-desc">${c.description}</div>
+        </div>
+      </div>
+      <div class="challenge-meta">
+        <span>📅 ${c.duration_days} kun</span>
+        <span>💰 +${c.ball_reward} ball</span>
+      </div>
+      ${c.joined
+        ? `<div class="challenge-badge joined">✅ Ishtirok etmoqdaman</div>`
+        : `<button class="challenge-badge join" onclick="joinChallenge(${c.id})">🚀 Qabul qilish</button>`
+      }
+    </div>`).join('');
+  } catch (e) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-text">❌ Yuklashda xatolik</div></div>`;
+  }
+}
+
+async function joinChallenge(id) {
+  try {
+    await apiPost('/api/challenge/join', { id });
+    await refresh();
+    loadChallenge();
+    showToast('🏁 Challenge qabul qilindi!');
+  } catch (e) {
+    if (e.message === 'already_joined') showToast('ℹ️ Allaqachon ishtirokchisiz');
+    else showToast('❌ ' + e.message);
+  }
+}
+
+// ─── BOZOR ─────────────────────────────────────────────────────────────
+function renderBozor() {
+  const list = document.getElementById('bozorList');
+  list.innerHTML = BOZOR_PAKETLAR.map((p, i) => `
+  <div class="challenge-card">
+    <div class="challenge-header">
+      <div class="challenge-emoji">${p.emoji}</div>
+      <div>
+        <div class="challenge-title">${p.nomi}</div>
+        <div class="challenge-desc">${p.tavsif}</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+      ${p.odatlar.map(o => `<span style="font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:3px 8px">${o}</span>`).join('')}
+    </div>
+    <button class="challenge-badge join" style="width:100%;padding:10px;cursor:pointer" onclick="installPackage(${i})">
+      📦 O'rnatish
+    </button>
+  </div>`).join('');
+}
+
+async function installPackage(idx) {
+  const paket = BOZOR_PAKETLAR[idx];
+  const EMOJIS = ['🕌','🏋️','📚','🎯','💚'];
+  let added = 0;
+  for (const odat of paket.odatlar) {
+    const parts = odat.split(' ');
+    const emojiCandidate = parts[parts.length-1];
+    const name = parts.slice(0,-1).join(' ');
+    try {
+      await apiPost('/api/habit/add', { name: name || odat, emoji: EMOJIS[idx] || '✅' });
+      added++;
+    } catch (e) {}
+  }
+  await refresh();
+  showToast(`✅ ${paket.nomi} o'rnatildi! (${added} odat)`);
+}
+
+// ─── HISOBOT ───────────────────────────────────────────────────────────
 async function loadReport(period) {
   const titles = { daily: 'Bugungi hisobot', weekly: 'Haftalik hisobot', monthly: 'Oylik hisobot' };
   document.getElementById('reportTitle').textContent = titles[period] || '';
-
   try {
     const data = await apiGet('/api/report', { period });
     renderReport(period, data);
-  } catch (e) {
-    showToast('❌ Hisobotni yuklab bo\'lmadi');
-  }
+  } catch (e) { showToast('❌ Hisobotni yuklab bo\'lmadi'); }
+
+  // Load intizom
+  try {
+    const d = await apiGet('/api/intizom');
+    document.getElementById('intizomBig').textContent = d.score;
+    document.getElementById('intizomBig').style.color = d.score >= 80 ? 'var(--green)' : d.score >= 50 ? 'var(--accent3)' : 'var(--red)';
+    document.getElementById('intizomRangBig').textContent = d.rang;
+    if (d.details) {
+      document.getElementById('iReja').textContent   = (d.details.reja   ?? '–') + ' pt';
+      document.getElementById('iNamoz').textContent  = (d.details.namoz  ?? '–') + ' pt';
+      document.getElementById('iOdat').textContent   = (d.details.odat   ?? '–') + ' pt';
+      document.getElementById('iStreak').textContent = (d.details.streak ?? '–') + ' pt';
+    }
+  } catch (e) {}
 }
 
 function renderReport(period, data) {
@@ -1745,31 +2149,146 @@ function renderReport(period, data) {
   document.getElementById('repTotal').textContent = data.total;
   document.getElementById('repDone').textContent  = data.done;
   document.getElementById('repNamoz').textContent = data.namoz;
-
   const offset = 201 - (201 * pct / 100);
   document.getElementById('ringDash').style.strokeDashoffset = offset;
-
   const chartData = data.chart || [];
   const maxVal = Math.max(...chartData.map(d => d.total), 1);
   const wrap = document.getElementById('chartWrap');
   const showLabel = period !== 'monthly';
-
   wrap.innerHTML = chartData.map(d => {
     const th = Math.round((d.total / maxVal) * 100);
     const dh = Math.round((d.done / maxVal) * 100);
-    const label = showLabel ? d.label : '';
     return `
     <div class="chart-col">
       <div class="chart-bars">
         <div class="chart-bar total" style="height:${th}%"></div>
         <div class="chart-bar done"  style="height:${dh}%"></div>
       </div>
-      <div class="chart-label">${label}</div>
+      <div class="chart-label">${showLabel ? d.label : ''}</div>
     </div>`;
   }).join('');
 }
 
-// ── UTILS ──────────────────────────────────────────────────────────────
+// ─── HEATMAP ───────────────────────────────────────────────────────────
+async function loadHeatmap() {
+  const grid = document.getElementById('heatmapGrid');
+  grid.innerHTML = '<div style="grid-column:span 10;text-align:center;padding:20px"><div class="spinner" style="margin:auto"></div></div>';
+  try {
+    const data = await apiGet('/api/heatmap');
+    grid.innerHTML = (data.days || []).map(d => {
+      const lvl = d.pct === 0 ? 0 : d.pct < 30 ? 1 : d.pct < 60 ? 2 : d.pct < 90 ? 3 : 4;
+      return `<div class="heatmap-cell level-${lvl}" title="${d.date}: ${d.done}/${d.total}" onclick="showHeatmapInfo('${d.date}',${d.done},${d.total},${d.pct})"></div>`;
+    }).join('');
+  } catch (e) {
+    grid.innerHTML = '<div style="grid-column:span 10;text-align:center;color:var(--muted);padding:20px">Yuklab bo\'lmadi</div>';
+  }
+}
+
+function showHeatmapInfo(date, done, total, pct) {
+  document.getElementById('heatmapInfo').textContent =
+    `📅 ${date}: ${done}/${total} reja bajarildi (${pct}%)`;
+}
+
+// ─── RATING ────────────────────────────────────────────────────────────
+async function loadRating() {
+  const list = document.getElementById('ratingList');
+  try {
+    const data = await apiGet('/api/rating');
+    if (!data.leaderboard.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">Hali foydalanuvchi yo'q</div></div>`;
+      return;
+    }
+    const medals = ['🥇','🥈','🥉'];
+    list.innerHTML = data.leaderboard.map(r => `
+    <div class="rating-item ${r.is_me ? 'me' : ''}">
+      <div class="rating-pos">${medals[r.pos-1] || r.pos}</div>
+      <div class="rating-name">${r.is_me ? '👤 ' : ''}${r.name}${r.is_me ? ' (Men)' : ''}</div>
+      <div class="rating-ball">${r.ball} 💰</div>
+    </div>`).join('');
+  } catch (e) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-text">❌ Yuklab bo'lmadi</div></div>`;
+  }
+}
+
+// ─── STORE ─────────────────────────────────────────────────────────────
+async function loadStore() {
+  const grid = document.getElementById('storeGrid');
+  try {
+    const data = await apiGet('/api/store/list');
+    storeItems = data.items || [];
+    renderStore();
+  } catch (e) {
+    grid.innerHTML = '<div style="grid-column:span 2;text-align:center;padding:20px;color:var(--muted)">Yuklab bo\'lmadi</div>';
+  }
+}
+
+function filterStore(type, el) {
+  currentStoreFilter = type;
+  document.querySelectorAll('.store-tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderStore();
+}
+
+function renderStore() {
+  const grid = document.getElementById('storeGrid');
+  if (!storeItems.length) {
+    grid.innerHTML = '<div style="grid-column:span 2"><div class="empty-state"><div class="empty-icon">🛒</div><div class="empty-text">Do\'konda mahsulot yo\'q</div></div></div>';
+    return;
+  }
+  const filtered = currentStoreFilter === 'all'
+    ? storeItems
+    : storeItems.filter(i => i.item_type === currentStoreFilter);
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="grid-column:span 2"><div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Bu kategoriyada mahsulot yo\'q</div></div></div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => `
+  <div class="store-item ${item.owned ? 'owned' : ''}" onclick="${item.owned ? '' : 'buyItem(' + item.id + ')'}">
+    <div class="store-item-emoji">${item.emoji}</div>
+    <div class="store-item-name">${item.name}</div>
+    <div class="store-item-desc">${item.description || ''}</div>
+    ${item.owned
+      ? `<div class="store-item-price owned-label">✅ Sotib olingan</div>`
+      : `<div class="store-item-price">💰 ${item.price} ball</div>`
+    }
+  </div>`).join('');
+}
+
+async function buyItem(id) {
+  const item = storeItems.find(x => x.id === id);
+  if (!item) return;
+  try {
+    await apiPost('/api/store/buy', { id });
+    await refresh();
+    loadStore();
+    showToast(`✅ ${item.emoji} ${item.name} olindi!`);
+  } catch (e) {
+    if (e.message === 'insufficient_ball') showToast('❌ Ball yetarli emas!');
+    else if (e.message === 'already_owned') showToast('ℹ️ Allaqachon mavjud');
+    else showToast('❌ ' + e.message);
+  }
+}
+
+// ─── AVATAR PAGE ────────────────────────────────────────────────────────
+function renderAvatarPage() {
+  if (!S) return;
+  const { avatar, user, unvon, level } = S;
+  const avatarStyle = avatar?.style || 'Standart';
+  const avatarEmoji = AVATAR_STYLES[avatarStyle] || '👤';
+  document.getElementById('avatarBig').textContent = avatarEmoji;
+  document.getElementById('avatarInfoName').textContent = user.name;
+  document.getElementById('avatarInfoUnvon').textContent = unvon;
+  document.getElementById('avatarXp').textContent = `XP: ${avatar?.xp || user.ball}`;
+  document.getElementById('avStyle').textContent  = avatarStyle;
+  document.getElementById('avFrame').textContent  = avatar?.frame || 'Standart';
+  document.getElementById('avBadge').textContent  = avatar?.badge || '–';
+  document.getElementById('avLevel').textContent  = 'Daraja ' + (level || 1);
+  document.getElementById('avUnvon').textContent  = unvon;
+}
+
+// ─── UTILS ─────────────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.createElement('div');
   t.className = 'toast'; t.textContent = msg;
@@ -1777,7 +2296,7 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 2500);
 }
 
-// ── START ──────────────────────────────────────────────────────────────
+// ─── START ─────────────────────────────────────────────────────────────
 init();
 </script>
 </body>
