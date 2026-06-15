@@ -2937,8 +2937,8 @@ def schedule_checker():
 # -----------------------------------------------------------------------
 from urllib.parse import parse_qsl
 
-api = Flask(__name__)
-CORS(api, resources={r"/api/*": {"origins": "*"}})
+api = Flask(__name__, static_folder='.', static_url_path='')
+CORS(api, resources={r"/*": {"origins": "*"}})
 
 NAMOZ_KEY_MAP = {
     'bomdod': 'Bomdod ☁️', 'peshin': 'Peshin 🌞', 'asr': 'Asr 🌤',
@@ -2987,6 +2987,11 @@ def get_request_user():
     return uid
 
 @api.route('/')
+def serve_index():
+    from flask import send_file
+    return send_file('index.html')
+
+@api.route('/health')
 def health():
     return "Bot ishlayapti! ✅"
 
