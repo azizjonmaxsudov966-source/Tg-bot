@@ -33,7 +33,7 @@ log = logging.getLogger("shaxsiy_nazoratchi")
 # Environment Variables orqali beriladi. Agar oldin tokenni shu faylga
 # yozib GitHub'ga yuklagan bo'lsangiz, @BotFather'da /revoke qiling va
 # yangi token oling — eski token allaqachon oshkor bo'lgan hisoblanadi!
-API_TOKEN    = os.environ.get('BOT_TOKEN')
+API_TOKEN    = os.environ.get('8239336439:AAEsMwnWliN6vWhErJ6YEsup7KxY5DctAp0')
 KANAL_ID     = os.environ.get('KANAL_ID', '@shaxsiy_nazoratchi')
 KANAL_LINKI  = os.environ.get('KANAL_LINKI', 'https://t.me/shaxsiy_nazoratchi')
 DB_PATH      = os.environ.get('DB_PATH', 'bot_data.db')
