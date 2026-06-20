@@ -1,1 +1,24 @@
-
+services:
+  - type: web
+    name: shaxsiy-nazoratchi-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    healthCheckPath: /health
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: MINI_APP_URL
+        sync: false
+      - key: KANAL_ID
+        value: "@shaxsiy_nazoratchi"
+      - key: KANAL_LINKI
+        value: "https://t.me/shaxsiy_nazoratchi"
+      - key: DB_PATH
+        value: "/var/data/bot_data.db"
+    disk:
+      name: bot-db
+      mountPath: /var/data
+      sizeGB: 1
