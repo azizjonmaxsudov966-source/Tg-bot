@@ -1057,6 +1057,8 @@ def check_subscription(message):
 @bot.callback_query_handler(func=lambda c: c.data == "check_sub")
 
 def cb_check_sub(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     try: bot.delete_message(call.message.chat.id, call.message.message_id)
     except Exception as e:
         log.debug("Xatolik (e'tiborga olinmadi): %s", e)
@@ -1100,6 +1102,8 @@ def step_save_phone(message):
 
 @bot.callback_query_handler(func=lambda c: c.data in ("gender_erkak", "gender_ayol"))
 def cb_gender_select(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     uid = call.from_user.id
     gender = "erkak" if call.data == "gender_erkak" else "ayol"
     conn = get_conn()
@@ -1385,16 +1389,22 @@ def show_store_category(call, item_type, category_name):
 @bot.callback_query_handler(func=lambda c: c.data == "store_avatar_style")
 
 def cb_store_avatar(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     show_store_category(call, "avatar_style", "🎨 Avatar Uslublari")
 
 @bot.callback_query_handler(func=lambda c: c.data == "store_frame")
 
 def cb_store_frame(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     show_store_category(call, "frame", "🖼 Ramkalar")
 
 @bot.callback_query_handler(func=lambda c: c.data == "store_badge")
 
 def cb_store_badge(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     show_store_category(call, "badge", "🏅 Nishonlar")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("buy_item_"))
@@ -2354,6 +2364,8 @@ def cb_namoz_stats(call):
 @bot.callback_query_handler(func=lambda c: c.data.startswith("namoz_"))
 
 def cb_namoz_answer(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     parts = call.data.split("_", 3)
     holat = parts[1]; uid = int(parts[2])
     nom_key = parts[3] if len(parts) > 3 else ""
@@ -2408,6 +2420,8 @@ def step_daily_time(message, task_name):
 @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
 
 def cb_category(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     parts = call.data.split("_", 3)
     cat = parts[1]; task_name = parts[2]; t = parts[3]
     uid = call.from_user.id
@@ -2422,6 +2436,8 @@ def cb_category(call):
 @bot.callback_query_handler(func=lambda c: c.data.startswith("pri_"))
 
 def cb_priority(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     parts = call.data.split("_", 4)
     priority = parts[1]; cat = parts[2]; task_name = parts[3]; t = parts[4]
     uid = call.from_user.id
@@ -2748,6 +2764,8 @@ def view_rewards(message):
 @bot.callback_query_handler(func=lambda c: c.data == "add_reward")
 
 def cb_add_reward(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     uid = call.from_user.id
     msg = bot.send_message(uid, f"🎁 Mukofot nomi:\n💰 Joriy ball: {get_ball(uid)}")
     bot.register_next_step_handler(msg, step_reward_name)
@@ -3025,6 +3043,8 @@ def back_main(message):
 @bot.callback_query_handler(func=lambda c: c.data.startswith("done_") or c.data.startswith("not_"))
 
 def cb_task_answer(call):
+    try: bot.answer_callback_query(call.id)
+    except Exception as _e: log.debug("answer_callback_query: %s", _e)
     parts = call.data.split("_")
     action = parts[0]; uid = int(parts[1]); tid = int(parts[2])
     status = 1 if action == "done" else 0
