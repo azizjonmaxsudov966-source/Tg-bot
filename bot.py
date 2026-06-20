@@ -3846,28 +3846,35 @@ def api_heatmap():
         days.append({"date": ds, "total": total, "done": done, "pct": pct})
     return jsonify({"days": days})
 
-def run_api_server():
-    port = int(os.environ.get("PORT", 8080))
-    api.run(host="0.0.0.0", port=port, threaded=True, use_reloader=False)
+def run_bot_polling():
+    """Bot polling — alohida daemon thread'da ishlaydi."""
+    while True:
+        try:
+            log.info("🤖 Bot polling boshlandi...")
+            bot.infinity_polling(timeout=30, long_polling_timeout=20)
+        except Exception as e:
+            log.warning("[POLLING] %s — 10 soniyadan keyin qayta uriniladi", e)
+            time.sleep(10)
 
 # -----------------------------------------------------------------------
 # 🎬 ISHGA TUSHIRISH
 # -----------------------------------------------------------------------
 if __name__ == "__main__":
-    print("✅ Bot ishga tushdi (UTC+5)")
-    print("🆕 Yangi funksiyalar: Avatar, Intizom, Challenges, Do'kon, Zikr, Reyting, AI Nazoratchi")
+    log.info("✅ Shaxsiy Nazoratchi bot ishga tushmoqda (UTC+5)")
 
-    api_thread = threading.Thread(target=run_api_server, daemon=True)
-    api_thread.start()
-    print("🌐 API server ishga tushdi")
+    # 1) Scheduler — fon thread'i
+    t_sched = threading.Thread(target=schedule_checker, daemon=True, name="scheduler")
+    t_sched.start()
+    log.info("⏰ Taymer (scheduler) ishga tushdi")
 
-    t = threading.Thread(target=schedule_checker, daemon=True)
-    t.start()
-    print("⏰ Taymer ishga tushdi")
+    # 2) Bot polling — fon thread'i
+    t_bot = threading.Thread(target=run_bot_polling, daemon=True, name="bot-polling")
+    t_bot.start()
+    log.info("🤖 Bot polling thread ishga tushdi")
 
-    while True:
-        try:
-            bot.infinity_polling(timeout=30, long_polling_timeout=20)
-        except Exception as e:
-            print(f"[POLLING] {e}")
-            time.sleep(10)
+    # 3) Flask (Mini App API) — ASOSIY JARAYON
+    # Render health check (/health) uchun Flask asosiy jarayonda ishlashi kerak.
+    # flask.run() bloklovchi — shuning uchun eng oxirida chaqiriladi.
+    port = int(os.environ.get("PORT", 8080))
+    log.info("🌐 Flask API server port=%d da ishga tushmoqda...", port)
+    api.run(host="0.0.0.0", port=port, threaded=True, use_reloader=False)
