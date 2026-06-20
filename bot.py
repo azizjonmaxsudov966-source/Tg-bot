@@ -487,6 +487,24 @@ def init_db():
     _add_column_if_missing('users', 'gender', "gender TEXT DEFAULT NULL")
     _add_column_if_missing('users', 'theme', "theme TEXT DEFAULT 'dark'")
     _add_column_if_missing('users', 'day_end_time', "day_end_time TEXT DEFAULT '22:00'")
+
+    # 🚀 INDEKSLAR — eng ko'p ishlatiladigan so'rovlarni tezlashtiradi.
+    # CREATE INDEX IF NOT EXISTS xavfsiz — mavjud bo'lsa o'tkazib yuboradi.
+    indexes = [
+        "CREATE INDEX IF NOT EXISTS idx_daily_tasks_user_sana    ON daily_tasks(user_id, sana)",
+        "CREATE INDEX IF NOT EXISTS idx_namoz_stats_user_sana    ON namoz_stats(user_id, sana)",
+        "CREATE INDEX IF NOT EXISTS idx_habit_logs_habit_sana    ON habit_logs(habit_id, sana)",
+        "CREATE INDEX IF NOT EXISTS idx_habit_logs_user_sana     ON habit_logs(user_id, sana)",
+        "CREATE INDEX IF NOT EXISTS idx_habits_user              ON habits(user_id, active)",
+        "CREATE INDEX IF NOT EXISTS idx_zikr_logs_zikr_sana      ON zikr_logs(zikr_id, sana)",
+        "CREATE INDEX IF NOT EXISTS idx_zikrs_user               ON zikrs(user_id, active)",
+        "CREATE INDEX IF NOT EXISTS idx_goals_user               ON goals(user_id)",
+        "CREATE INDEX IF NOT EXISTS idx_namoz_notify_asked       ON namoz_notify(asked, notified_at)",
+        "CREATE INDEX IF NOT EXISTS idx_cycle_days_user_sana     ON cycle_days(user_id, sana)",
+    ]
+    for idx_sql in indexes:
+        c.execute(idx_sql)
+
     conn.commit()
 
     # Do'kon buyumlarini seed qilish
@@ -579,10 +597,13 @@ def add_ball_conn(conn, uid, amount):
 def get_motivatsiya():
     return random.choice(MOTIVATSIYA)
 
-def get_avatar(uid):
-    conn = get_conn()
+def get_avatar(uid, conn=None):
+    _own = conn is None
+    if _own:
+        conn = get_conn()
     row = conn.execute("SELECT style,frame,badge FROM avatar WHERE user_id=?", (uid,)).fetchone()
-    conn.close()
+    if _own:
+        conn.close()
     if not row:
         return {"style": "warrior", "frame": "none", "badge": "none"}
     return dict(row)
@@ -615,11 +636,15 @@ def render_avatar(uid):
 # 💯 INTIZOM INDEKSI
 # -----------------------------------------------------------------------
 
-def calculate_intizom(uid, sana=None):
-    """0-100 intizom indeksini hisoblash"""
+def calculate_intizom(uid, sana=None, conn=None):
+    """0-100 intizom indeksini hisoblash.
+    conn berilsa mavjud ulanish ishlatiladi (yangi ulanish ochilmaydi).
+    """
     if sana is None:
         sana = today_str()
-    conn = get_conn()
+    _own_conn = conn is None
+    if _own_conn:
+        conn = get_conn()
 
     score = 0
     details = {}
@@ -680,7 +705,8 @@ def calculate_intizom(uid, sana=None):
     score += streak_ball
     details['streak'] = {"kun": streak, "ball": streak_ball}
 
-    conn.close()
+    if _own_conn:
+        conn.close()
     return min(100, score), details
 
 def intizom_rang(score):
@@ -3343,8 +3369,11 @@ def api_data():
     unvon = get_unvon(ball)
     level = get_level(ball)
     next_ball, next_unvon = keyingi_unvon(ball)
-    score, _ = calculate_intizom(uid)
-    av = get_avatar(uid)
+
+    # Barcha og'ir hisob-kitoblar bitta ulanish orqali
+    score, _ = calculate_intizom(uid, conn=conn)
+    av = get_avatar(uid, conn=conn)
+
     daily = conn.execute(
         "SELECT id,task_name,task_time,status,category,priority FROM daily_tasks WHERE user_id=? AND sana=? ORDER BY task_time",
         (uid, today_str())).fetchall()
@@ -3370,18 +3399,42 @@ def api_data():
         if k in namoz_week: namoz_week[k] = r['cnt']
     namoz_streak = compute_namoz_streak(conn, uid)
     cycle_today = is_cycle_day(conn, uid, today_str())
-    habit_rows = conn.execute("SELECT id,name,emoji FROM habits WHERE user_id=? AND active=1", (uid,)).fetchall()
+
+    # Odatlar + streak — BITTA SQL so'rov bilan (oldin har odat uchun
+    # alohida while loop bor edi, u O(odatlar × kunlar) edi)
+    habit_rows = conn.execute(
+        "SELECT id,name,emoji FROM habits WHERE user_id=? AND active=1", (uid,)).fetchall()
     habits = []
-    for h in habit_rows:
-        log_today = conn.execute("SELECT done FROM habit_logs WHERE habit_id=? AND sana=?", (h['id'], today_str())).fetchone()
-        done_today = bool(log_today and log_today['done'])
-        streak = 0; d = uz_time().date()
-        while True:
-            ds = d.strftime("%Y-%m-%d")
-            log = conn.execute("SELECT done FROM habit_logs WHERE habit_id=? AND sana=?", (h['id'], ds)).fetchone()
-            if not (log and log['done']): break
-            streak += 1; d = d - timedelta(days=1)
-        habits.append({"id":h['id'],"name":h['name'],"emoji":h['emoji'],"done":done_today,"streak":streak})
+    if habit_rows:
+        # So'nggi 30 kun uchun barcha loglarni bir martada yuklaymiz
+        start30 = (uz_time().date() - timedelta(days=29)).strftime("%Y-%m-%d")
+        logs_raw = conn.execute(
+            "SELECT habit_id, sana, done FROM habit_logs "
+            "WHERE user_id=? AND sana>=? ORDER BY habit_id, sana DESC",
+            (uid, start30)).fetchall()
+        # Odat → kun → done lug'ati
+        from collections import defaultdict
+        log_map = defaultdict(dict)
+        for lr in logs_raw:
+            log_map[lr['habit_id']][lr['sana']] = lr['done']
+
+        today_s = today_str()
+        for h in habit_rows:
+            hid = h['id']
+            done_today = bool(log_map[hid].get(today_s))
+            # Streak: ketma-ket kunlarni sanab chiqamiz
+            streak = 0
+            d = uz_time().date()
+            for _ in range(30):
+                ds = d.strftime("%Y-%m-%d")
+                if log_map[hid].get(ds):
+                    streak += 1
+                else:
+                    break
+                d -= timedelta(days=1)
+            habits.append({"id": hid, "name": h['name'], "emoji": h['emoji'],
+                           "done": done_today, "streak": streak})
+
     goal_rows = conn.execute("SELECT id,title,deadline,reward,status,created,ball_reward FROM goals WHERE user_id=? ORDER BY id DESC", (uid,)).fetchall()
     reward_rows = conn.execute("SELECT id,title,ball_cost,created FROM rewards WHERE user_id=? ORDER BY id DESC", (uid,)).fetchall()
     zikr_rows = conn.execute("SELECT z.id,z.name,z.emoji,z.target_count,COALESCE(zl.count,0) as today_count FROM zikrs z LEFT JOIN zikr_logs zl ON z.id=zl.zikr_id AND zl.sana=? WHERE z.user_id=? AND z.active=1", (today_str(), uid)).fetchall()
@@ -3471,7 +3524,7 @@ def api_stats_trend():
                 "SELECT COUNT(*) as cnt FROM namoz_stats WHERE user_id=? AND sana=? AND holat='oqildi'",
                 (uid, ds)).fetchone()
             namoz_foiz = round((nrow['cnt'] or 0) / 5 * 100)
-        score, _ = calculate_intizom(uid, ds)
+        score, _ = calculate_intizom(uid, ds, conn=conn)
         out.append({"sana": ds, "vazifa_foiz": vazifa_foiz, "namoz_foiz": namoz_foiz, "intizom": score})
     return jsonify({"days": out})
 
@@ -3639,7 +3692,8 @@ def api_goal_complete():
 def api_intizom():
     uid = get_request_user()
     if uid is None: return jsonify({"error": "unauthorized"}), 401
-    score, details = calculate_intizom(uid)
+    conn = request_db()
+    score, details = calculate_intizom(uid, conn=conn)
     return jsonify({"score": score, "rang": intizom_rang(score), "details": details})
 
 @api.route('/api/rating')
