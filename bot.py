@@ -1006,6 +1006,24 @@ def cmd_app(message):
     markup.add(types.InlineKeyboardButton("📱 Ilovani ochish", web_app=types.WebAppInfo(url=MINI_APP_URL)))
     bot.send_message(uid, "📱 *Shaxsiy Nazoratchi* ilovasini oching:", reply_markup=markup, parse_mode="Markdown")
 
+@bot.message_handler(commands=['test'])
+def cmd_test(message):
+    """Callback query ishlayotganini tekshirish — /test yuboring va tugmani bosing."""
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("✅ Meni bosing", callback_data="test_ping"))
+    bot.send_message(message.chat.id, "🔧 Test tugmasini bosing:", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data == "test_ping")
+def cb_test_ping(call):
+    try: bot.answer_callback_query(call.id, "✅ Ishlayapti!")
+    except Exception as e: log.debug("answer: %s", e)
+    log.info("[TEST] callback keldi uid=%s", call.from_user.id)
+    try:
+        bot.edit_message_text("✅ *Callback query ishlayapti!*\n\nBoshqa tugmalar ham ishlashi kerak.",
+                              call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+    except Exception as e:
+        bot.send_message(call.from_user.id, "✅ Callback ishlayapti!")
+
 @bot.message_handler(commands=['reset_db'])
 
 def cmd_reset_db(message):
@@ -4013,10 +4031,30 @@ def api_heatmap():
 
 def run_bot_polling():
     """Bot polling — alohida daemon thread'da ishlaydi."""
+    # Webhook o'chiramiz — agar ilgari webhook orqali ishlagan bo'lsa,
+    # Telegram callback query'larni webhook'ga yuborishda davom etadi
+    # va polling hech narsa olmaydi. Bu eng ko'p uchraydigan sabab.
+    try:
+        bot.delete_webhook(drop_pending_updates=False)
+        log.info("🔗 Webhook o'chirildi (polling rejimiga o'tildi)")
+    except Exception as e:
+        log.warning("delete_webhook: %s", e)
+
     while True:
         try:
             log.info("🤖 Bot polling boshlandi...")
-            bot.infinity_polling(timeout=30, long_polling_timeout=20)
+            bot.infinity_polling(
+                timeout=30,
+                long_polling_timeout=20,
+                # callback_query ni ANIQ so'raymiz — belgilanmasa
+                # Telegram eski konfiguratsiyani ishlatishi mumkin
+                allowed_updates=[
+                    "message",
+                    "callback_query",
+                    "my_chat_member",
+                    "chat_member",
+                ],
+            )
         except Exception as e:
             log.warning("[POLLING] %s — 10 soniyadan keyin qayta uriniladi", e)
             time.sleep(10)
