@@ -63,6 +63,24 @@ def is_admin(uid):
 
 bot = telebot.TeleBot(API_TOKEN, parse_mode=None)
 
+# 🛡️ safe_callback decorator: callback handler'lardan chiqqan har qanday
+# yutilmagan exception'ni log'ga yozadi va foydalanuvchiga xabar yuboradi.
+# "Tugma bosildi lekin hech narsa bo'lmadi" holati bartaraf etiladi.
+def safe_callback(func):
+    import functools
+    @functools.wraps(func)
+    def wrapper(call):
+        try:
+            func(call)
+        except Exception as e:
+            log.exception("Callback xatosi [%s] data=%s", func.__name__, getattr(call, 'data', '?'))
+            try:
+                bot.send_message(call.from_user.id,
+                    "⚠️ Xatolik yuz berdi. Qaytadan urinib ko'ring yoki /start bosing.")
+            except Exception:
+                pass
+    return wrapper
+
 # -----------------------------------------------------------------------
 # 💬 MOTIVATSION XABARLAR
 # -----------------------------------------------------------------------
@@ -1055,14 +1073,37 @@ def check_subscription(message):
         bot.send_message(uid, "⚠️ Botdan foydalanish uchun avval kanalga a'zo bo'ling:", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda c: c.data == "check_sub")
-
+@safe_callback
 def cb_check_sub(call):
     try: bot.answer_callback_query(call.id)
     except Exception as _e: log.debug("answer_callback_query: %s", _e)
     try: bot.delete_message(call.message.chat.id, call.message.message_id)
     except Exception as e:
         log.debug("Xatolik (e'tiborga olinmadi): %s", e)
-    check_subscription(call.message)
+    # call.message — bot xabari, uning from_user = bot.
+    # Foydalanuvchi ID'si call.from_user.id orqali olinadi.
+    uid = call.from_user.id
+    try:
+        status = bot.get_chat_member(KANAL_ID, uid).status
+        subscribed = status in ['member', 'administrator', 'creator']
+    except Exception as e:
+        log.debug("get_chat_member xato: %s", e)
+        subscribed = True  # Shubhali holatda ruxsat beramiz
+    if subscribed:
+        if is_registered(uid):
+            show_main_menu(uid)
+        else:
+            # ask_name message ob'ektini kutadi, shuning uchun soxta ob'ekt beramiz
+            class _FakeMsg:
+                chat = type('C', (), {'id': uid})()
+                from_user = type('U', (), {'id': uid})()
+            ask_name(_FakeMsg())
+    else:
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("📢 Kanalga a'zo bo'lish", url=KANAL_LINKI))
+        markup.add(types.InlineKeyboardButton("✅ A'zo bo'ldim", callback_data="check_sub"))
+        bot.send_message(uid, "⚠️ Botdan foydalanish uchun avval kanalga a'zo bo'ling:",
+                         reply_markup=markup)
 
 # -----------------------------------------------------------------------
 # 📝 RO'YXATDAN O'TISH
@@ -1106,19 +1147,34 @@ def cb_gender_select(call):
     except Exception as _e: log.debug("answer_callback_query: %s", _e)
     uid = call.from_user.id
     gender = "erkak" if call.data == "gender_erkak" else "ayol"
-    conn = get_conn()
-    conn.execute("UPDATE users SET gender=?, registered=1 WHERE user_id=?", (gender, uid))
-    conn.execute("INSERT OR IGNORE INTO avatar (user_id) VALUES (?)", (uid,))
-    conn.commit(); conn.close()
-    bot.edit_message_text(f"{'👨' if gender == 'erkak' else '👩'} Tanlandi!", call.message.chat.id, call.message.message_id)
-    bot.send_message(uid,
-        "✅ *Ro'yxatdan muvaffaqiyatli o'tdingiz!*\n\n"
-        "💰 Boshlang'ich 10 ball berildi!\n"
-        "🎭 Avatar: Jangchi ⚔️🛡️\n\n"
-        "💡 Ball yig'ib avatarni rivojlantiring!",
-        parse_mode="Markdown")
-    add_ball(uid, 10)
-    show_main_menu(uid)
+    try:
+        conn = get_conn()
+        conn.execute("UPDATE users SET gender=?, registered=1 WHERE user_id=?", (gender, uid))
+        conn.execute("INSERT OR IGNORE INTO avatar (user_id) VALUES (?)", (uid,))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        log.exception("cb_gender_select DB xato")
+        bot.send_message(uid, "❌ Xatolik yuz berdi. /start bosing.")
+        return
+    try:
+        bot.edit_message_text(
+            f"{'👨' if gender == 'erkak' else '👩'} Tanlandi!",
+            call.message.chat.id, call.message.message_id)
+    except Exception as e:
+        log.debug("edit_message_text: %s", e)
+    try:
+        bot.send_message(uid,
+            "✅ *Ro'yxatdan muvaffaqiyatli o'tdingiz!*\n\n"
+            "💰 Boshlang'ich 10 ball berildi!\n"
+            "🎭 Avatar: Jangchi ⚔️🛡️\n\n"
+            "💡 Ball yig'ib avatarni rivojlantiring!",
+            parse_mode="Markdown")
+        add_ball(uid, 10)
+        show_main_menu(uid)
+    except Exception as e:
+        log.exception("cb_gender_select send xato")
+        bot.send_message(uid, "Xush kelibsiz! /start bosing.")
 
 # -----------------------------------------------------------------------
 # 👤 PROFIL
@@ -2366,24 +2422,59 @@ def cb_namoz_stats(call):
 def cb_namoz_answer(call):
     try: bot.answer_callback_query(call.id)
     except Exception as _e: log.debug("answer_callback_query: %s", _e)
-    parts = call.data.split("_", 3)
-    holat = parts[1]; uid = int(parts[2])
-    nom_key = parts[3] if len(parts) > 3 else ""
-    nom = nom_key.replace("__", " ")
-    conn = get_conn()
-    conn.execute("INSERT INTO namoz_stats (user_id,namoz_nomi,sana,holat) VALUES (?,?,?,?)",
-                 (uid, nom, today_str(), holat))
-    conn.commit(); conn.close()
-    if holat == "oqildi":
-        text = f"✅ Barakalla! *{nom}* o'qildi! +10 ball"; add_ball(uid, 10)
-    elif holat == "endi_oqiyman":
-        text = f"⏳ *{nom}* namozini o'qing!"; add_ball(uid, 3)
-    else:
-        text = f"🔄 *{nom}* qazo sifatida belgilandi."; add_ball(uid, 2)
-    try: bot.edit_message_text(text, call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+    try:
+        # Format: namoz_{holat}_{uid}_{nom_key}
+        # holat "endi_oqiyman" bo'lishi mumkin, nom_key "__" tutishi mumkin.
+        # uid — har doim son, shuning uchun regex bilan izlaymiz.
+        import re as _re
+        without_prefix = call.data[len("namoz_"):]  # "{holat}_{uid}_{nom_key}"
+        m = _re.search(r'_(\d+)_(.+)$', without_prefix)
+        if not m:
+            raise ValueError(f"Noto'g'ri format: {call.data!r}")
+        holat   = without_prefix[:m.start()]   # "oqildi" / "qazo" / "endi_oqiyman"
+        uid     = int(m.group(1))
+        nom_key = m.group(2)
+        nom     = nom_key.replace("__", " ")
     except Exception as e:
-        log.debug("Xatolik: %s", e)
-        bot.send_message(uid, text, parse_mode="Markdown")
+        log.exception("cb_namoz_answer parse xato: %s", call.data)
+        return
+
+    try:
+        conn = get_conn()
+        # Dublikat oldini olamiz
+        existing = conn.execute(
+            "SELECT id FROM namoz_stats WHERE user_id=? AND namoz_nomi=? AND sana=?",
+            (uid, nom, today_str())).fetchone()
+        if existing:
+            conn.execute("UPDATE namoz_stats SET holat=? WHERE id=?", (holat, existing['id']))
+        else:
+            conn.execute(
+                "INSERT INTO namoz_stats (user_id,namoz_nomi,sana,holat) VALUES (?,?,?,?)",
+                (uid, nom, today_str(), holat))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        log.exception("cb_namoz_answer DB xato")
+        bot.send_message(uid, "❌ Xatolik yuz berdi.")
+        return
+
+    if holat == "oqildi":
+        text = f"✅ Barakalla! *{nom}* o'qildi! +10 ball 💰"
+        add_ball(uid, 10)
+    elif holat == "endi_oqiyman":
+        text = f"⏳ *{nom}* namozini o'qing! +3 ball"
+        add_ball(uid, 3)
+    else:
+        text = f"🔄 *{nom}* qazo sifatida belgilandi. +2 ball"
+        add_ball(uid, 2)
+
+    try:
+        bot.edit_message_text(text, call.message.chat.id, call.message.message_id,
+                              parse_mode="Markdown")
+    except Exception as e:
+        log.debug("edit_message_text: %s", e)
+        try: bot.send_message(uid, text, parse_mode="Markdown")
+        except Exception as e2: log.debug("send_message fallback: %s", e2)
 
 # -----------------------------------------------------------------------
 # 📝 KUNLIK REJA
